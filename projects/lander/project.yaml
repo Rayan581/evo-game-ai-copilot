@@ -1,0 +1,38 @@
+# EVO onboarding file for Project A. Read once by `evo onboard`; after approval the
+# facts live in evo.db and this file is never needed again (see restart scenario).
+project_id: lander
+name: Lunar Lander PPO tuning
+owner: Ryn
+goal: Find a PPO configuration that learns LunarLander faster than the baseline within a 200k-step budget.
+env_id: LunarLander-v3
+algo: PPO
+total_timesteps: 200000
+n_envs: 4
+device: cpu            # small MLP policies train as fast on CPU; set cuda to use the RTX 4060
+eval:
+  freq: 10000          # evaluate every 10k steps
+  episodes: 3          # deterministic eval episodes per point
+primary_metric:
+  name: mean_eval_return_last_k
+  k: 5                 # score = mean eval return over the last 5 eval points
+target_score: 100
+min_seeds: 3           # a config needs 3 completed seeds before it can be ranked
+run_budget: 15         # max runs the agent may launch for this project
+deadline: "2026-11-10"
+env_allowlist: [LunarLander-v3]
+baseline_hyperparams:
+  learning_rate: 0.0003
+  lr_schedule: constant
+  n_steps: 1024
+  batch_size: 64
+  n_epochs: 4
+  gamma: 0.999
+  gae_lambda: 0.98
+  ent_coef: 0.01
+  clip_range: 0.2
+search_space:
+  learning_rate: {min: 0.0001, max: 0.003}
+  lr_schedule: {choices: [constant, linear]}
+  ent_coef: {min: 0.0, max: 0.05}
+  n_epochs: {min: 3, max: 10, type: int}
+  clip_range: {min: 0.1, max: 0.3}

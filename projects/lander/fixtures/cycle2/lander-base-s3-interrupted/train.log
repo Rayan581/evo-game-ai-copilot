@@ -1,0 +1,11 @@
+2026-10-23 10:59:17,299 INFO start run=lander-base-s3-interrupted env=LunarLander-v3 algo=PPO seed=3 steps=200000 device=cpu
+2026-10-23 10:59:22,095 INFO eval step=10000 mean=-153.94 std=23.65 n=3
+2026-10-23 10:59:26,370 INFO eval step=20000 mean=-159.74 std=14.68 n=3
+2026-10-23 10:59:32,189 INFO eval step=30000 mean=32.34 std=83.80 n=3
+2026-10-23 10:59:37,776 INFO eval step=40000 mean=-37.12 std=15.79 n=3
+2026-10-23 10:59:43,663 INFO eval step=50000 mean=-117.00 std=14.72 n=3
+2026-10-23 10:59:49,557 INFO eval step=60000 mean=-203.27 std=45.29 n=3
+2026-10-23 10:59:57,675 INFO eval step=70000 mean=-383.86 std=18.48 n=3
+2026-10-23 11:00:07,295 INFO eval step=80000 mean=-263.07 std=13.97 n=3
+2026-10-23 11:00:15,925 INFO eval step=90000 mean=-138.39 std=16.45 n=3
+2026-10-23 11:00:22,604 WARNING simulated interruption at step 100000

@@ -1,0 +1,16 @@
+# Core (agent, memory, CLI)
+typer>=0.12
+rich>=13
+pydantic>=2.6
+PyYAML>=6
+numpy>=1.26
+openpyxl>=3.1
+requests>=2.31
+python-dotenv>=1.0
+# Training (RL substrate). On Windows with the RTX 4060 install the CUDA build of torch first:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+torch>=2.2
+gymnasium[box2d]>=1.0
+stable-baselines3>=2.3
+# Tests
+pytest>=8

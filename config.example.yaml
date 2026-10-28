@@ -1,0 +1,19 @@
+# Copy to config.yaml to override defaults (see evo/settings.py for every option).
+# No secrets here: the API key goes in .env as EVO_LLM_API_KEY.
+llm:
+  provider: openai_compat          # openai_compat | offline
+  # Groq (free tier). Check https://console.groq.com/docs/models for current model ids.
+  base_url: https://api.groq.com/openai/v1
+  model: openai/gpt-oss-120b
+  # Local alternative (Ollama, no key needed):
+  # base_url: http://localhost:11434/v1
+  # model: qwen2.5:7b-instruct
+  temperature: 0.0
+runner:
+  mode: live                       # live | fixture (replay real runs from projects/<id>/fixtures/bank)
+  timeout_s: 1800
+agent:
+  max_steps_per_cycle: 8
+analysis:
+  collapse_drop_frac: 0.5
+  plateau_rel_slope: 0.01

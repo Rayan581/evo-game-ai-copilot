@@ -1,0 +1,37 @@
+# EVO onboarding file for Project B (used for the isolation scenario).
+project_id: dungeon
+name: GridDungeon DQN
+owner: Ryn
+goal: Train a DQN agent that reliably clears procedurally generated key-and-exit dungeons.
+env_id: GridDungeon-v0
+algo: DQN
+total_timesteps: 60000
+n_envs: 1
+device: cpu
+eval:
+  freq: 5000
+  episodes: 20
+primary_metric:
+  name: mean_eval_return_last_k
+  k: 3
+target_score: 1.0
+min_seeds: 3
+run_budget: 12
+deadline: "2026-11-15"
+env_allowlist: [GridDungeon-v0]
+baseline_hyperparams:
+  learning_rate: 0.001
+  buffer_size: 50000
+  learning_starts: 1000
+  batch_size: 64
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 1000
+  exploration_fraction: 0.3
+  exploration_final_eps: 0.05
+  net_arch: [64, 64]
+search_space:
+  learning_rate: {min: 0.0001, max: 0.003}
+  exploration_fraction: {min: 0.05, max: 0.6}
+  exploration_final_eps: {min: 0.01, max: 0.2}
+  target_update_interval: {min: 250, max: 5000, type: int}

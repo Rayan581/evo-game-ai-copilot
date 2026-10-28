@@ -1,0 +1,32 @@
+{
+  "pass_rate": "9/10",
+  "memory_on": 3,
+  "memory_off": 1,
+  "claims_correct": 5,
+  "resources": {
+    "approx_prompt_tokens_per_planner_call": 2592,
+    "planner_calls": [
+      {
+        "provider": "openai_compat",
+        "model": "openai/gpt-oss-120b",
+        "n": 17,
+        "lat": 394382
+      }
+    ],
+    "llm_http_calls_cached": 21,
+    "llm_tokens": {
+      "prompt": 66767,
+      "completion": 12335
+    },
+    "cycle_wall_seconds": {
+      "cycle1": 38.56,
+      "cycle2": 222.51,
+      "cycle3": 136.42,
+      "cycle-dungeon": 73.03
+    },
+    "training_wall_minutes_of_runs_in_project": 39.1,
+    "duplicate_agent_runs": 0,
+    "failed_attempts_logged": 1,
+    "skipped_duplicates": 0
+  }
+}

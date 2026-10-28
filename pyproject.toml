@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evo-copilot"
+version = "0.1.0"
+description = "EVO - persistent game AI experiment co-pilot (agentic RL experiment manager with SQLite memory)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "pydantic>=2.6",
+    "PyYAML>=6",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+train = ["torch>=2.2", "gymnasium[box2d]>=1.0", "stable-baselines3>=2.3"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+evo = "evo.cli:app"
+
+[tool.setuptools]
+packages = ["evo", "evo.memory", "evo.tools", "evo.llm", "evo.safety"]
+
+[tool.setuptools.package-data]
+evo = ["memory/schema.sql", "tools/webapp.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

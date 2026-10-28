@@ -1,0 +1,22 @@
+2026-10-23 10:32:30,774 INFO start run=lander-2027bd-s3 env=LunarLander-v3 algo=PPO seed=3 steps=200000 device=cpu
+2026-10-23 10:32:35,606 INFO eval step=10000 mean=-98.97 std=4.11 n=3
+2026-10-23 10:32:41,251 INFO eval step=20000 mean=105.14 std=120.70 n=3
+2026-10-23 10:32:46,908 INFO eval step=30000 mean=-25.58 std=138.67 n=3
+2026-10-23 10:32:52,224 INFO eval step=40000 mean=-23.71 std=120.71 n=3
+2026-10-23 10:32:58,031 INFO eval step=50000 mean=36.27 std=150.27 n=3
+2026-10-23 10:33:05,443 INFO eval step=60000 mean=52.05 std=204.11 n=3
+2026-10-23 10:33:18,876 INFO eval step=70000 mean=-39.43 std=90.76 n=3
+2026-10-23 10:33:32,550 INFO eval step=80000 mean=-9.42 std=73.53 n=3
+2026-10-23 10:33:47,160 INFO eval step=90000 mean=48.09 std=60.41 n=3
+2026-10-23 10:33:58,343 INFO eval step=100000 mean=-10.67 std=15.56 n=3
+2026-10-23 10:34:08,331 INFO eval step=110000 mean=156.19 std=119.69 n=3
+2026-10-23 10:34:17,012 INFO eval step=120000 mean=229.95 std=24.36 n=3
+2026-10-23 10:34:25,593 INFO eval step=130000 mean=244.23 std=28.80 n=3
+2026-10-23 10:34:36,802 INFO eval step=140000 mean=251.23 std=4.02 n=3
+2026-10-23 10:34:46,781 INFO eval step=150000 mean=193.51 std=55.84 n=3
+2026-10-23 10:34:57,802 INFO eval step=160000 mean=147.44 std=88.94 n=3
+2026-10-23 10:35:09,547 INFO eval step=170000 mean=44.14 std=120.76 n=3
+2026-10-23 10:35:22,560 INFO eval step=180000 mean=-20.17 std=21.84 n=3
+2026-10-23 10:35:34,373 INFO eval step=190000 mean=-59.87 std=6.13 n=3
+2026-10-23 10:35:46,293 INFO eval step=200000 mean=41.88 std=145.79 n=3
+2026-10-23 10:35:47,586 INFO finished in 199.3s

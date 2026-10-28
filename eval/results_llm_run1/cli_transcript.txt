@@ -1,0 +1,395 @@
+$ evo init   [init, pid-new-process, 0.7s, rc=0]
+evo.db ready at X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\data\evo.db; knowledge docs: 6 (re-indexed 6)
+
+$ evo onboard X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\project.yaml --yes   [onboard, pid-new-process, 0.7s, rc=0]
+                                         Extracted facts for lander - confirm baseline                                         
+┌──────────────────────┬──────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Fact                 │ Value                                                                                                │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ goal                 │ Find a PPO configuration that learns LunarLander faster than the baseline within a 200k-step budget. │
+│ owner                │ Ryn                                                                                                  │
+│ env_id               │ LunarLander-v3                                                                                       │
+│ algo                 │ PPO                                                                                                  │
+│ total_timesteps      │ 200000                                                                                               │
+│ n_envs               │ 4                                                                                                    │
+│ device               │ cpu                                                                                                  │
+│ eval                 │ {freq: 10000, episodes: 3}                                                                           │
+│ primary_metric       │ {name: mean_eval_return_last_k, k: 5}                                                                │
+│ target_score         │ 100                                                                                                  │
+│ min_seeds            │ 3                                                                                                    │
+│ run_budget           │ 15                                                                                                   │
+│ deadline             │ 2026-11-10                                                                                           │
+│ env_allowlist        │ [LunarLander-v3]                                                                                     │
+│ baseline_hyperparams │ {learning_rate: 0.0003, lr_schedule: constant, n_steps: 1024, batch_size: 64, n_epochs: 4,           │
+│                      │   gamma: 0.999, gae_lambda: 0.98, ent_coef: 0.01, clip_range: 0.2}                                   │
+│ search_space         │ {learning_rate: {min: 0.0001, max: 0.003}, lr_schedule: {choices: },                                 │
+│                      │   ent_coef: {min: 0.0, max: 0.05}, n_epochs: {min: 3, max: 10, type: int}, clip_range: {             │
+│                      │     min: 0.1, max: 0.3}}                                                                             │
+└──────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+Onboarded lander (16 facts, version 1).
+
+$ evo stage lander cycle1   [stage1, pid-new-process, 0.7s, rc=0]
+staged 5 run folder(s) from cycle1
+
+$ evo cycle lander --no-prompt --clock 2026-10-24   [cycle1, pid-new-process, 38.6s, rc=0]
+  opened cycle 1 (memory on, clock 2026-10-24)
+  ingested: 5 new, 0 updated, 0 unchanged; 0 new finding(s)
+  step 1: search_knowledge {"query": "seed variance"}
+  step 2: open_hypothesis {"change": {"learning_rate": 0.003}, "statement": "learning_rate=0.003 yields higher mean eval return than baseline"}
+  step 3: request_seeds {"group": "90afd50200", "seeds": 2}
+  step 4: end_cycle {"summary": "Open hypothesis H1 (learning_rate=0.003 yields higher mean eval return than baseline) still lacks sufficient seeds 
+(min_seeds=3). We have requested
+  closed cycle 1: Open hypothesis H1 (learning_rate=0.003 yields higher mean eval return than baseline) still lacks sufficient seeds (min_seeds=3). We have 
+requested two additional seeds for group 90afd50200 (pending approval). Await completion of these runs before further analysis.
+┌────────────────────────────────────────────────────────────────────── Cycle 1 closed ───────────────────────────────────────────────────────────────────────┐
+│ Open hypothesis H1 (learning_rate=0.003 yields higher mean eval return than baseline) still lacks sufficient seeds (min_seeds=3). We have requested two     │
+│ additional seeds for group 90afd50200 (pending approval). Await completion of these runs before further analysis.                                           │
+│ pending approvals: [1]                                                                                                                                      │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\register.xlsx                                                   │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\cycle-01.md                                                       │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+$ evo approve lander 1 --comment approved in eval   [c1-approve-1, pid-new-process, 0.9s, rc=0]
+{
+  "approval": "approved",
+  "executed": true,
+  "result": [
+    {
+      "reused": true,
+      "run": "lander-90afd5-s1",
+      "status": "completed"
+    },
+    {
+      "mode": "fixture",
+      "run": "lander-90afd5-s2",
+      "source": "lander-90afd5-s2",
+      "status": "launched"
+    }
+  ]
+}
+
+$ evo stage lander cycle2   [stage2, pid-new-process, 0.7s, rc=0]
+staged 2 run folder(s) from cycle2
+
+$ evo status lander   [status-after-restart, pid-new-process, 0.6s, rc=0]
+┌──────────────────────────────────────────────────────────────────────── EVO status ─────────────────────────────────────────────────────────────────────────┐
+│ Lunar Lander PPO tuning (lander) - LunarLander-v3 / PPO                                                                                                     │
+│ goal: Find a PPO configuration that learns LunarLander faster than the baseline within a 200k-step budget.                                                  │
+│ metric: mean eval return, last 5 evals | target 100 | min seeds 3 | budget 15 agent runs | deadline 2026-11-10                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                            Config groups (deterministic analysis)                                             
+┌─────────────────────┬───────┬─────────┬───────────────────┬────────────────────┬───────────┬──────────────────────┬─────────┐
+│ Config              │ Seeds │ Mean    │ CI95              │ vs baseline        │ Diff CI95 │ Flags                │ Pending │
+├─────────────────────┼───────┼─────────┼───────────────────┼────────────────────┼───────────┼──────────────────────┼─────────┤
+│ learning_rate=0.003 │ 1     │ 108.91  │                   │ insufficient_seeds │           │ no_evalx2, runningx2 │ 2       │
+│ baseline (baseline) │ 3     │ -28.65  │ [-152.65, 135.66] │                    │           │                      │         │
+│ ent_coef=0.0        │ 1     │ -125.81 │                   │ insufficient_seeds │           │                      │         │
+└─────────────────────┴───────┴─────────┴───────────────────┴────────────────────┴───────────┴──────────────────────┴─────────┘
+                                                       Hypotheses                                                       
+┌────┬────────┬────────────────────────┬──────────────────────────────────────────────────────────────────┬────────────┐
+│ ID │ Status │ Change                 │ Statement                                                        │ Resolution │
+├────┼────────┼────────────────────────┼──────────────────────────────────────────────────────────────────┼────────────┤
+│ H1 │ open   │ {learning_rate: 0.003} │ learning_rate=0.003 yields higher mean eval return than baseline │            │
+└────┴────────┴────────────────────────┴──────────────────────────────────────────────────────────────────┴────────────┘
+┌──────────────────────────────────────────────────────────────────────── Last cycle ─────────────────────────────────────────────────────────────────────────┐
+│ cycle 1 (closed, memory on, clock 2026-10-24)                                                                                                               │
+│ recommended next: Open hypothesis H1 (learning_rate=0.003 yields higher mean eval return than baseline) still lacks sufficient seeds (min_seeds=3). We have │
+│ requested two additional seeds for group 90afd50200 (pending approval). Await completion of these runs before further analysis.                             │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+$ evo cycle lander --no-prompt --clock 2026-10-26   [cycle2, pid-new-process, 222.5s, rc=0]
+  opened cycle 2 (memory on, clock 2026-10-26)
+  ingested: 2 new, 2 updated, 5 unchanged; 5 new finding(s)
+  flagged instruction-like text in lander-clip03-manual-s0 (diag:2) - treated as data
+  step 1: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 2: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 3: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 4: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 5: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 6: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 7: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 8: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  closed cycle 2: step budget reached
+┌────────────────────────────────────────────────────────────────────── Cycle 2 closed ───────────────────────────────────────────────────────────────────────┐
+│ step budget reached                                                                                                                                         │
+│ pending approvals: [2]                                                                                                                                      │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\register.xlsx                                                   │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\cycle-02.md                                                       │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+$ evo approve lander 2 --comment approved in eval   [c2-approve-2, pid-new-process, 0.8s, rc=0]
+{
+  "approval": "approved",
+  "executed": true,
+  "result": {
+    "hypothesis": "H1",
+    "status": "inconclusive"
+  }
+}
+
+$ evo correct-metric lander lander-base-s0 X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s0.eval20.csv --reason eval used 3 episodes; re-scored every checkpoint with 20 episodes --yes   [correct-lander-base-s0, pid-new-process, 0.8s, rc=0]
+proposal 10: new metric version for lander-base-s0 from X:\FAST Tasks\7th 
+Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s0.eval20.csv
+{
+  "approval": "approved",
+  "executed": true,
+  "result": {
+    "metric_id": 10,
+    "run": "lander-base-s0"
+  }
+}
+
+$ evo correct-metric lander lander-base-s1 X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s1.eval20.csv --reason eval used 3 episodes; re-scored every checkpoint with 20 episodes --yes   [correct-lander-base-s1, pid-new-process, 0.7s, rc=0]
+proposal 11: new metric version for lander-base-s1 from X:\FAST Tasks\7th 
+Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s1.eval20.csv
+{
+  "approval": "approved",
+  "executed": true,
+  "result": {
+    "metric_id": 11,
+    "run": "lander-base-s1"
+  }
+}
+
+$ evo correct-metric lander lander-base-s2 X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s2.eval20.csv --reason eval used 3 episodes; re-scored every checkpoint with 20 episodes --yes   [correct-lander-base-s2, pid-new-process, 0.7s, rc=0]
+proposal 12: new metric version for lander-base-s2 from X:\FAST Tasks\7th 
+Semester\Agentic\evo\.eval_scratch\work\projects\lander\fixtures\corrections\lander-base-s2.eval20.csv
+{
+  "approval": "approved",
+  "executed": true,
+  "result": {
+    "metric_id": 12,
+    "run": "lander-base-s2"
+  }
+}
+
+$ evo correct lander run_budget 12 --reason supervisor cut the GPU budget --yes   [correct-budget, pid-new-process, 0.7s, rc=0]
+proposal 13: run_budget: 15 -> 12
+{
+  "approval": "approved",
+  "executed": true,
+  "result": 17
+}
+
+$ evo cycle lander --no-prompt --clock 2026-10-28   [cycle3, pid-new-process, 136.4s, rc=0]
+  opened cycle 3 (memory on, clock 2026-10-28)
+  ingested: 0 new, 0 updated, 9 unchanged; 1 new finding(s)
+  step 1: search_knowledge {"query": "seed variance impact on RL results"}
+  step 2: propose_runs {"change": {"clip_range": 0.1}, "seeds": 3}
+  step 3: request_seeds {"group": "56ec94412b", "seeds": 2}
+  step 4: search_knowledge {"query": "seed variance RL results"}
+  step 5: end_cycle {"summary": "Current run budget (12) is nearly exhausted (9 runs used). Pending proposals include clip_range=0.1 (3 seeds) and 
+clip_range=0.3 (2 seeds). Lesson 
+  closed cycle 3: Current run budget (12) is nearly exhausted (9 runs used). Pending proposals include clip_range=0.1 (3 seeds) and clip_range=0.3 (2 seeds). 
+Lesson advises avoiding clip_range >=0.3 (lesson:1) and the 0.3 config already collapsed (diag:5). Therefore, approve the clip_range=0.1 proposal (fits budget)
+and reject the clip_range=0.3 proposal. Proceed with the 0.1 runs to gather sufficient seeds.
+┌────────────────────────────────────────────────────────────────────── Cycle 3 closed ───────────────────────────────────────────────────────────────────────┐
+│ Current run budget (12) is nearly exhausted (9 runs used). Pending proposals include clip_range=0.1 (3 seeds) and clip_range=0.3 (2 seeds). Lesson advises  │
+│ avoiding clip_range >=0.3 (lesson:1) and the 0.3 config already collapsed (diag:5). Therefore, approve the clip_range=0.1 proposal (fits budget) and reject │
+│ the clip_range=0.3 proposal. Proceed with the 0.1 runs to gather sufficient seeds.                                                                          │
+│ pending approvals: [14, 15]                                                                                                                                 │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\register.xlsx                                                   │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\lander\reports\cycle-03.md                                                       │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+$ evo onboard X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\dungeon\project.yaml --yes   [onboard-dungeon, pid-new-process, 0.7s, rc=0]
+                                  Extracted facts for dungeon - confirm baseline                                  
+┌──────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Fact                 │ Value                                                                                   │
+├──────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────┤
+│ goal                 │ Train a DQN agent that reliably clears procedurally generated key-and-exit dungeons.    │
+│ owner                │ Ryn                                                                                     │
+│ env_id               │ GridDungeon-v0                                                                          │
+│ algo                 │ DQN                                                                                     │
+│ total_timesteps      │ 60000                                                                                   │
+│ n_envs               │ 1                                                                                       │
+│ device               │ cpu                                                                                     │
+│ eval                 │ {freq: 5000, episodes: 20}                                                              │
+│ primary_metric       │ {name: mean_eval_return_last_k, k: 3}                                                   │
+│ target_score         │ 1.0                                                                                     │
+│ min_seeds            │ 3                                                                                       │
+│ run_budget           │ 12                                                                                      │
+│ deadline             │ 2026-11-15                                                                              │
+│ env_allowlist        │ [GridDungeon-v0]                                                                        │
+│ baseline_hyperparams │ {learning_rate: 0.001, buffer_size: 50000, learning_starts: 1000, batch_size: 64,       │
+│                      │   gamma: 0.99, train_freq: 4, target_update_interval: 1000, exploration_fraction: 0.3,  │
+│                      │   exploration_final_eps: 0.05, net_arch: [64, 64]}                                      │
+│ search_space         │ {learning_rate: {min: 0.0001, max: 0.003}, exploration_fraction: {min: 0.05, max: 0.6}, │
+│                      │   exploration_final_eps: {min: 0.01, max: 0.2}, target_update_interval: {min: 250,      │
+│                      │     max: 5000, type: int}}                                                              │
+└──────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────┘
+Onboarded dungeon (16 facts, version 1).
+
+$ evo stage dungeon cycle1   [stage-dungeon, pid-new-process, 0.7s, rc=0]
+staged 4 run folder(s) from cycle1
+
+$ evo cycle dungeon --no-prompt --clock 2026-10-28   [cycle-dungeon, pid-new-process, 73.0s, rc=0]
+  opened cycle 1 (memory on, clock 2026-10-28)
+  ingested: 4 new, 0 updated, 0 unchanged; 2 new finding(s)
+  step 1: search_knowledge {"query": "seed variance min_seeds"}
+  step 2: open_hypothesis {"change": {"exploration_fraction": 0.05}, "statement": "Reducing exploration_fraction to 0.05 improves performance compared to the 
+baseline DQN configuration."
+  step 3: request_seeds {"group": "9ac32aa72b", "seeds": 2}
+  step 4: end_cycle {"summary": "Open hypothesis H1 (exploration_fraction=0.05 improves performance) still lacks sufficient seeds (needs 3, currently 1 
+completed, 2 pending). Await
+  closed cycle 1: Open hypothesis H1 (exploration_fraction=0.05 improves performance) still lacks sufficient seeds (needs 3, currently 1 completed, 2 pending).
+Await completion of pending seed runs before evaluating or resolving the hypothesis.
+┌────────────────────────────────────────────────────────────────────── Cycle 1 closed ───────────────────────────────────────────────────────────────────────┐
+│ Open hypothesis H1 (exploration_fraction=0.05 improves performance) still lacks sufficient seeds (needs 3, currently 1 completed, 2 pending). Await         │
+│ completion of pending seed runs before evaluating or resolving the hypothesis.                                                                              │
+│ pending approvals: [17]                                                                                                                                     │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\dungeon\reports\register.xlsx                                                  │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\work\projects\dungeon\reports\cycle-01.md                                                      │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+$ evo history dungeon --run lander-base-s0   [isolation-probe, pid-new-process, 0.8s, rc=1]
+┌───────────────────────────────────────────────────────────── Traceback (most recent call last) ─────────────────────────────────────────────────────────────┐
+│ X:\FAST Tasks\7th Semester\Agentic\evo\evo\cli.py:287 in history                                                                                            │
+│                                                                                                                                                             │
+│   284 │   s = _store()                                                                                                                                      │
+│   285 │   sc = _scope(s, project)                                                                                                                           │
+│   286 │   if run:                                                                                                                                           │
+│ > 287 │   │   r = sc.run_by_name(run)                                                                                                                       │
+│   288 │   │   t = Table("Version", "Status", "Source", "Reason", "Approved by", "Created", title=f"metrics of {run}")                                       │
+│   289 │   │   k = int(sc.fact("primary_metric", {}).get("k", 5))                                                                                            │
+│   290 │   │   for m in sc.metric_rows(r["run_id"]):                                                                                                         │
+│                                                                                                                                                             │
+│ X:\FAST Tasks\7th Semester\Agentic\evo\evo\memory\store.py:221 in run_by_name                                                                               │
+│                                                                                                                                                             │
+│   218 │   │   │   other = self.conn.execute("SELECT project_id FROM runs WHERE name=?", (name,)).fetchone()                                                 │
+│   219 │   │   │   if other is not None:                                                                                                                     │
+│   220 │   │   │   │   self.t.read(f"runs:DENIED:{name}")                                                                                                    │
+│ > 221 │   │   │   │   raise IsolationError(f"run '{name}' does not belong to project '{self.pid}'")                                                         │
+│   222 │   │   │   raise NotFound(f"run '{name}' not found in project '{self.pid}'")                                                                         │
+│   223 │   │   self.t.read(f"runs:{name}")                                                                                                                   │
+│   224 │   │   return row_to_dict(r)                                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+IsolationError: run 'lander-base-s0' does not belong to project 'dungeon'
+
+--- memory case M1 (on) ---
+$ evo stage lander cycle2   [, pid-new-process, 0.7s, rc=0]
+staged 2 run folder(s) from cycle2
+
+$ evo cycle lander --no-prompt --memory on --clock 2026-10-26 --in-place   [M1-on, pid-new-process, 107.1s, rc=0]
+  opened cycle 2 (memory on, clock 2026-10-26)
+  ingested: 2 new, 2 updated, 5 unchanged; 5 new finding(s)
+  flagged instruction-like text in lander-clip03-manual-s0 (diag:2) - treated as data
+  step 1: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 2: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 3: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  step 4: resolve_hypothesis {"hypothesis": "H1", "outcome": "inconclusive"}
+  closed cycle 2: step budget reached
+┌────────────────────────────────────────────────────────────────────── Cycle 2 closed ───────────────────────────────────────────────────────────────────────┐
+│ step budget reached                                                                                                                                         │
+│ pending approvals: [2]                                                                                                                                      │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M1-on\projects\lander\reports\register.xlsx                                             │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M1-on\projects\lander\reports\cycle-02.md                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+--- memory case M1 (off) ---
+$ evo stage lander cycle2   [, pid-new-process, 0.7s, rc=0]
+staged 2 run folder(s) from cycle2
+
+$ evo cycle lander --no-prompt --memory off --clock 2026-10-26 --in-place   [M1-off, pid-new-process, 50.9s, rc=0]
+  opened cycle 2 (memory off, clock 2026-10-26)
+  ingested: 2 new, 2 updated, 5 unchanged; 5 new finding(s)
+  flagged instruction-like text in lander-clip03-manual-s0 (diag:2) - treated as data
+  step 1: request_seeds {"group": "56ec94412b", "seeds": 2}
+  step 2: end_cycle {"summary": "A request for additional seeds for the clip_range=0.3 config (group 56ec94412b) is pending approval. No other actions can 
+proceed until the seeds a
+  closed cycle 2: A request for additional seeds for the clip_range=0.3 config (group 56ec94412b) is pending approval. No other actions can proceed until the 
+seeds are allocated or the pending proposal is resolved.
+┌────────────────────────────────────────────────────────────────────── Cycle 2 closed ───────────────────────────────────────────────────────────────────────┐
+│ A request for additional seeds for the clip_range=0.3 config (group 56ec94412b) is pending approval. No other actions can proceed until the seeds are       │
+│ allocated or the pending proposal is resolved.                                                                                                              │
+│ pending approvals: [2]                                                                                                                                      │
+│ register: None                                                                                                                                              │
+│ report: None                                                                                                                                                │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+--- memory case M2 (on) ---
+$ evo reject lander 1 --comment lr 3e-3 is too unstable for my budget   [, pid-new-process, 0.7s, rc=0]
+{
+  "approval": "rejected"
+}
+
+$ evo stage lander cycle2   [, pid-new-process, 0.6s, rc=0]
+staged 2 run folder(s) from cycle2
+
+$ evo cycle lander --no-prompt --memory on --clock 2026-10-26 --in-place   [M2-on, pid-new-process, 47.4s, rc=0]
+  opened cycle 2 (memory on, clock 2026-10-26)
+  ingested: 2 new, 0 updated, 5 unchanged; 4 new finding(s)
+  flagged instruction-like text in lander-clip03-manual-s0 (diag:2) - treated as data
+  step 1: request_seeds {"group": "90afd50200", "seeds": 3}
+  step 2: ask_user {"question": "Do you approve the pending proposal (id 2) to run three additional seeds for the learning_rate=0.003 configuration (group 
+90afd50200) to resolve h
+  closed cycle 2: Do you approve the pending proposal (id 2) to run three additional seeds for the learning_rate=0.003 configuration (group 90afd50200) to 
+resolve hypothesis H1?
+┌────────────────────────────────────────────────────────────────────── Cycle 2 closed ───────────────────────────────────────────────────────────────────────┐
+│ Do you approve the pending proposal (id 2) to run three additional seeds for the learning_rate=0.003 configuration (group 90afd50200) to resolve hypothesis │
+│ H1?                                                                                                                                                         │
+│ pending approvals: [2]                                                                                                                                      │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M2-on\projects\lander\reports\register.xlsx                                             │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M2-on\projects\lander\reports\cycle-02.md                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+--- memory case M2 (off) ---
+$ evo reject lander 1 --comment lr 3e-3 is too unstable for my budget   [, pid-new-process, 0.7s, rc=0]
+{
+  "approval": "rejected"
+}
+
+$ evo stage lander cycle2   [, pid-new-process, 0.6s, rc=0]
+staged 2 run folder(s) from cycle2
+
+$ evo cycle lander --no-prompt --memory off --clock 2026-10-26 --in-place   [M2-off, pid-new-process, 89.1s, rc=0]
+  opened cycle 2 (memory off, clock 2026-10-26)
+  ingested: 2 new, 0 updated, 5 unchanged; 4 new finding(s)
+  flagged instruction-like text in lander-clip03-manual-s0 (diag:2) - treated as data
+  step 1: search_knowledge {"query": "seed variance"}
+  step 2: open_hypothesis {"change": {"learning_rate": 0.003}, "statement": "Increasing learning_rate to 0.003 improves mean eval return over baseline"}
+  step 3: request_seeds {"group": "90afd50200", "seeds": 3}
+  step 4: end_cycle {"summary": "A hypothesis H1 (learning_rate=0.003 improves performance) has been opened and a request for the required three seeds 
+(min_seeds=3) has been made, 
+  closed cycle 2: A hypothesis H1 (learning_rate=0.003 improves performance) has been opened and a request for the required three seeds (min_seeds=3) has been 
+made, but the proposal is still pending user approval. No further actions can be taken until the seeds are provided.
+┌────────────────────────────────────────────────────────────────────── Cycle 2 closed ───────────────────────────────────────────────────────────────────────┐
+│ A hypothesis H1 (learning_rate=0.003 improves performance) has been opened and a request for the required three seeds (min_seeds=3) has been made, but the  │
+│ proposal is still pending user approval. No further actions can be taken until the seeds are provided.                                                      │
+│ pending approvals: [2]                                                                                                                                      │
+│ register: None                                                                                                                                              │
+│ report: None                                                                                                                                                │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+--- memory case M3 (on) ---
+$ evo cycle lander --no-prompt --memory on --clock 2026-10-28 --in-place   [M3-on, pid-new-process, 41.0s, rc=0]
+  opened cycle 3 (memory on, clock 2026-10-28)
+  ingested: 0 new, 0 updated, 9 unchanged; 1 new finding(s)
+  step 1: propose_runs {"change": {"learning_rate": 0.0001}, "seeds": 3}
+  step 2: end_cycle {"summary": "We have a pending proposal to test learning_rate=0.0001 with 3 seeds (evidence from seed‑variance notes and lesson avoiding 
+high clip_range). No op
+  closed cycle 3: We have a pending proposal to test learning_rate=0.0001 with 3 seeds (evidence from seed‑variance notes and lesson avoiding high clip_range).
+No open hypotheses remain, and the only other insufficient‑seed config (clip_range=0.3) is explicitly discouraged by lesson:1, so we should not pursue it. 
+Await the approval and execution of the pending runs before taking further steps.
+┌────────────────────────────────────────────────────────────────────── Cycle 3 closed ───────────────────────────────────────────────────────────────────────┐
+│ We have a pending proposal to test learning_rate=0.0001 with 3 seeds (evidence from seed‑variance notes and lesson avoiding high clip_range). No open       │
+│ hypotheses remain, and the only other insufficient‑seed config (clip_range=0.3) is explicitly discouraged by lesson:1, so we should not pursue it. Await    │
+│ the approval and execution of the pending runs before taking further steps.                                                                                 │
+│ pending approvals: [14]                                                                                                                                     │
+│ register: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M3-on\projects\lander\reports\register.xlsx                                             │
+│ report: X:\FAST Tasks\7th Semester\Agentic\evo\.eval_scratch\case-M3-on\projects\lander\reports\cycle-03.md                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+--- memory case M3 (off) ---
+$ evo cycle lander --no-prompt --memory off --clock 2026-10-28 --in-place   [M3-off, pid-new-process, 39.2s, rc=0]
+  opened cycle 3 (memory off, clock 2026-10-28)
+  ingested: 0 new, 0 updated, 9 unchanged; 0 new finding(s)
+  step 1: propose_runs {"change": {"n_epochs": 10}, "seeds": 3}
+  step 2: ask_user {"question": "Do you approve the pending proposal (ID 14) to run three seeds with n_epochs=10?"}
+  closed cycle 3: Do you approve the pending proposal (ID 14) to run three seeds with n_epochs=10?
+┌────────────────────────────────────────────────────────────────────── Cycle 3 closed ───────────────────────────────────────────────────────────────────────┐
+│ Do you approve the pending proposal (ID 14) to run three seeds with n_epochs=10?                                                                            │
+│ pending approvals: [14]                                                                                                                                     │
+│ register: None                                                                                                                                              │
+│ report: None                                                                                                                                                │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘

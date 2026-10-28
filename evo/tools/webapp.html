@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="evo-token" content="__EVO_TOKEN__">
+<title>EVO</title>
+<style>
+:root{
+  --bg:#f8f6f2;--surface:#ffffff;--surface-2:#f2efe9;--ink:#1d1b18;--ink-2:#45413b;--muted:#6f685e;--line:#e5e0d6;--line-2:#d6cfc2;
+  --accent:#b4502a;--accent-ink:#ffffff;--accent-soft:#f6e6dd;
+  --good:#2b7a4b;--good-soft:#e2f1e7;--bad:#b3261e;--bad-soft:#f8e3e1;--warn:#8a5f00;--warn-soft:#f7ecd2;--info:#2a5fa8;--info-soft:#e3ecf8;
+  --base-line:#7d766b;
+  --s0:#2a78d6;--s1:#eb6834;--s2:#1baf7a;--s3:#eda100;--s4:#e87ba4;--s5:#008300;--s6:#6250d6;--s7:#e34948;
+  --shadow:0 1px 2px rgba(30,25,15,.06),0 4px 16px rgba(30,25,15,.06);
+  --radius:10px;--serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,"SFMono-Regular",Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141311;--surface:#1d1b18;--surface-2:#24221e;--ink:#eeeae3;--ink-2:#cfc9bf;--muted:#a1998d;--line:#322e29;--line-2:#433e37;
+  --accent:#e07a4f;--accent-ink:#1a0f09;--accent-soft:#3a251b;
+  --good:#5cc086;--good-soft:#1b3326;--bad:#f07167;--bad-soft:#3d1f1c;--warn:#e0ad45;--warn-soft:#3a2f17;--info:#7aa7ea;--info-soft:#1c2a3e;
+  --base-line:#a39b8f;
+  --s0:#3987e5;--s1:#d95926;--s2:#199e70;--s3:#c98500;--s4:#d55181;--s5:#2e9b2e;--s6:#9085e9;--s7:#e66767;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#141311;--surface:#1d1b18;--surface-2:#24221e;--ink:#eeeae3;--ink-2:#cfc9bf;--muted:#a1998d;--line:#322e29;--line-2:#433e37;
+  --accent:#e07a4f;--accent-ink:#1a0f09;--accent-soft:#3a251b;
+  --good:#5cc086;--good-soft:#1b3326;--bad:#f07167;--bad-soft:#3d1f1c;--warn:#e0ad45;--warn-soft:#3a2f17;--info:#7aa7ea;--info-soft:#1c2a3e;
+  --base-line:#a39b8f;
+  --s0:#3987e5;--s1:#d95926;--s2:#199e70;--s3:#c98500;--s4:#d55181;--s5:#2e9b2e;--s6:#9085e9;--s7:#e66767;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;margin:0}
+h1{font-size:30px;line-height:1.15}
+h2{font-size:22px}
+h3{font-size:17px}
+code,.mono{font-family:var(--mono);font-size:.86em}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.tiny{font-size:12px}
+/* layout */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:10px 20px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:.02em;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.top .spacer{flex:1}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 57px)}
+.side{border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:57px;height:calc(100vh - 57px);overflow:auto}
+.side a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-weight:500}
+.side a:hover{background:var(--surface-2)}
+.side a.on{background:var(--accent-soft);color:var(--accent)}
+.side a .count{margin-left:auto;background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:12px;padding:0 7px;font-weight:600}
+.side .sep{height:1px;background:var(--line);margin:14px 6px}
+.side svg{width:18px;height:18px;flex:none}
+main{padding:28px clamp(16px,3vw,40px) 80px;max-width:1180px;width:100%;min-width:0}
+.kv dd,.cfg > *{min-width:0;overflow-wrap:anywhere}
+.page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.page-head p{margin:6px 0 0;color:var(--muted);max-width:68ch}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.card h3{margin-bottom:6px}
+.card + .card{margin-top:16px}
+.section{margin-top:30px}
+.section > h2{margin-bottom:4px}
+.section > .lead{color:var(--muted);margin:0 0 14px;max-width:72ch}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.stack > * + *{margin-top:10px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--surface);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.good{background:var(--good);border-color:var(--good);color:#fff}
+.btn.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;width:36px;height:36px;display:inline-grid;place-items:center;cursor:pointer}
+.iconbtn svg{width:18px;height:18px}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;width:100%}
+textarea{min-height:64px;resize:vertical}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin:12px 0 5px}
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+.p-good{background:var(--good-soft);color:var(--good)}
+.p-bad{background:var(--bad-soft);color:var(--bad)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-info{background:var(--info-soft);color:var(--info)}
+.p-muted{background:var(--surface-2);color:var(--muted)}
+.p-accent{background:var(--accent-soft);color:var(--accent)}
+.chip{display:inline-block;font-family:var(--mono);font-size:12px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);margin:2px 4px 2px 0;text-decoration:none;cursor:default}
+a.chip{cursor:pointer}
+a.chip:hover{border-color:var(--accent);color:var(--accent)}
+.term{border-bottom:1px dotted var(--muted);cursor:help}
+/* planner chip */
+.planner{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.planner .d{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.planner .d.off{background:var(--muted)}
+.planner .d.warn{background:var(--warn)}
+.proj-select{max-width:260px}
+/* next steps */
+.next{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.next.first{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));background:linear-gradient(0deg,var(--surface),var(--surface)),var(--accent-soft);box-shadow:var(--shadow)}
+.next .n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700}
+.next h3{font-family:var(--sans);font-size:16px;font-weight:600}
+.next p{margin:3px 0 10px;color:var(--muted)}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.stat .k{font-size:12px;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--serif);font-size:28px;line-height:1.2;margin-top:2px}
+.stat .s{font-size:12px;color:var(--muted)}
+.meter{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden;margin-top:8px;display:flex}
+.meter i{display:block;height:100%}
+/* story */
+.story{position:relative;padding-left:26px}
+.story:before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.ev{position:relative;margin-bottom:18px}
+.ev:before{content:"";position:absolute;left:-23px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--line-2)}
+.ev.cyc:before{background:var(--accent);border-color:var(--accent)}
+.ev.you:before{background:var(--info);border-color:var(--info)}
+.ev .when{font-size:12px;color:var(--muted)}
+.ev h3{font-family:var(--sans);font-size:15px;font-weight:600;margin:1px 0 6px}
+.ev ul{margin:4px 0 0;padding-left:18px}
+.ev li{margin:3px 0;color:var(--ink-2)}
+.ev li.refused{color:var(--bad)}
+.outcome{margin-top:8px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14px}
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:hover td{background:var(--surface-2)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.scroll-x{overflow-x:auto}
+/* config rows */
+.cfg{display:grid;grid-template-columns:minmax(170px,240px) minmax(0,1fr);gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.cfg:last-child{border-bottom:0}
+.cfg .name{font-weight:600;display:flex;align-items:center;gap:8px}
+.sw{width:12px;height:12px;border-radius:3px;flex:none}
+.sw.base{background:transparent;border:2px dashed var(--base-line)}
+.cfg .meta{font-size:13px;color:var(--muted);margin-top:2px}
+.verdict-text{font-size:13px;margin-top:6px;color:var(--ink-2)}
+/* charts */
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;overflow:visible}
+.chart text{fill:var(--muted);font-size:11px;font-family:var(--sans)}
+.axis line,.axis path{stroke:var(--line-2)}
+.gridline{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:7px 9px;border-radius:7px;white-space:nowrap;z-index:5;box-shadow:var(--shadow);display:none}
+.tip b{font-weight:600}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.legend button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer}
+.legend button.offl{opacity:.4}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:5px 11px;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+/* decisions */
+.step{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:0}
+.step .no{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--surface-2);color:var(--ink-2)}
+.step.refused .no{background:var(--bad-soft);color:var(--bad)}
+.step .say{font-weight:500}
+.step .why{color:var(--muted);font-size:14px;margin-top:3px}
+.step .gate{margin-top:6px;font-size:13px}
+.step .gate.no{color:var(--bad)}
+details{margin-top:6px}
+details > summary{cursor:pointer;color:var(--muted);font-size:13px}
+details > summary:hover{color:var(--ink)}
+pre{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;font-family:var(--mono);font-size:12px;line-height:1.45;max-height:420px;white-space:pre-wrap;word-break:break-word}
+/* proposals */
+.prop{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:18px;box-shadow:var(--shadow)}
+.prop + .prop{margin-top:14px}
+.prop .ask{font-size:17px;font-weight:600;margin:4px 0 8px}
+.kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:6px 14px;font-size:14px;margin:10px 0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.callout{padding:12px 14px;border-radius:8px;background:var(--surface-2);font-size:14px;border:1px solid var(--line)}
+.callout.info{background:var(--info-soft);border-color:transparent}
+.callout.warn{background:var(--warn-soft);border-color:transparent}
+.callout.bad{background:var(--bad-soft);border-color:transparent}
+.callout.good{background:var(--good-soft);border-color:transparent}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;counter-reset:f}
+.flow div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);font-size:13px;color:var(--muted)}
+.flow b{display:block;color:var(--ink);font-size:14px;margin-bottom:3px}
+.flow b:before{counter-increment:f;content:counter(f) ". ";color:var(--accent)}
+.flow .mem{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+/* hypotheses */
+.hyp{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--surface)}
+.hyp + .hyp{margin-top:10px}
+.life{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.life span{padding:2px 8px;border-radius:999px;background:var(--surface-2)}
+.life span.on{background:var(--accent);color:var(--accent-ink)}
+/* checklist */
+.check{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:11px 0;border-bottom:1px solid var(--line)}
+.check:last-child{border-bottom:0}
+.check .box{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center;margin-top:1px}
+.check.done .box{background:var(--good);border-color:var(--good);color:#fff}
+.check.cur .box{border-color:var(--accent)}
+.check.done .t{color:var(--muted)}
+.check .t{font-weight:600}
+.check .x{color:var(--muted);font-size:13px}
+/* drawer + modal */
+.scrim{position:fixed;inset:0;background:rgba(10,8,5,.42);z-index:40;display:none}
+.scrim.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);background:var(--bg);border-left:1px solid var(--line);z-index:50;transform:translateX(100%);transition:transform .22s ease;display:flex;flex-direction:column;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.drawer.wide{width:min(980px,100vw)}
+.drawer.on{transform:none}
+.drawer header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.drawer header h2{font-size:19px;flex:1}
+.drawer .body{padding:18px;overflow:auto;flex:1}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:14px;z-index:60;display:none;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal.on{display:block}
+.modal header{padding:18px 20px 0}
+.modal .body{padding:8px 20px 20px}
+.modal footer{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:var(--surface)}
+.opt + .opt{margin-top:8px}
+.opt input{width:auto;margin-top:4px}
+.opt.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.opt .t{font-weight:600}
+.opt .x{font-size:13px;color:var(--muted)}
+.opt.dis{opacity:.55;cursor:not-allowed}
+/* console */
+.live{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.spin{width:14px;height:14px;border:2px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.evline{font-size:13px;color:var(--muted);padding:3px 0;font-family:var(--mono)}
+.thinking{display:flex;gap:10px;align-items:center;padding:12px;border:1px dashed var(--line-2);border-radius:10px;color:var(--muted);margin-top:8px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.cols .card{margin:0}
+.toast-wrap{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center;width:min(560px,calc(100vw - 24px))}
+.toast{background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:14px;width:100%}
+.toast.err{background:var(--bad);color:#fff}
+.empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);border-radius:var(--radius)}
+.pop{position:absolute;z-index:90;max-width:300px;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;font-size:13px;box-shadow:var(--shadow);display:none}
+.pop b{display:block;margin-bottom:3px}
+.bottomnav{display:none}
+.hide-sm{}
+@media (max-width:980px){
+  .g2,.g3{grid-template-columns:1fr}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  .bottomnav{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--line);z-index:35;padding:4px 2px calc(4px + env(safe-area-inset-bottom))}
+  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);text-decoration:none;padding:4px 0;position:relative}
+  .bottomnav a.on{color:var(--accent)}
+  .bottomnav svg{width:20px;height:20px}
+  .bottomnav .count{position:absolute;top:0;right:calc(50% - 20px);background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:10px;padding:0 5px}
+  main{padding:20px 16px 90px}
+  .top{padding:8px 12px;gap:8px}
+  .hide-sm{display:none !important}
+  h1{font-size:25px}
+  .cfg{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .kv dt{margin-top:6px}
+  .planner .lbl{display:none}
+}
+
+/* v2: one-screen layout */
+.shell{display:block;min-height:calc(100vh - 57px)}
+main{margin:0 auto;padding:26px clamp(16px,3vw,32px) 90px;max-width:1120px}
+.tabs{display:flex;gap:4px;margin-left:10px}
+.tabs a{padding:7px 15px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-weight:600}
+.tabs a:hover{background:var(--surface-2)}
+.tabs a.on{background:var(--accent-soft);color:var(--accent)}
+.top .iconbtn{position:relative}
+.top .iconbtn .count{position:absolute;top:-5px;right:-5px;background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:11px;padding:0 5px;font-weight:700}
+.work{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:22px;align-items:start}
+.work > div > .card + .card, .work > div > .card + details{margin-top:16px}
+.hello{margin:0 0 18px}
+.hello h1{font-size:28px}
+.hello p{margin:4px 0 0;color:var(--muted)}
+.card.task{padding:22px}
+.card.task h2{margin-bottom:14px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{border:1.5px solid var(--line-2);border-radius:12px;padding:13px 15px;cursor:pointer;background:var(--surface);text-align:left;display:block;width:100%}
+.mode:hover{border-color:var(--ink-2)}
+.mode.on{border-color:var(--accent);background:var(--accent-soft)}
+.mode b{display:block;font-size:15px}
+.mode span{font-size:13px;color:var(--muted)}
+.fields{display:grid;grid-template-columns:1.3fr 1fr .7fr;gap:10px;margin-top:14px}
+.hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+.startrow{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:18px}
+.startrow select{width:auto;min-width:200px}
+.btn.big{padding:11px 26px;font-size:16px;border-radius:10px}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2);margin-top:12px}
+.chk input{width:auto}
+.needs{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));background:linear-gradient(0deg,var(--surface),var(--surface))}
+.needs h2{display:flex;align-items:center;gap:10px}
+.needs h2 .pill{font-family:var(--sans)}
+.prop2{padding:14px 0;border-top:1px solid var(--line)}
+.prop2:first-of-type{border-top:0}
+.prop2 .ask{font-weight:600;font-size:16px}
+.prop2 .why{color:var(--muted);font-size:14px;margin:3px 0 8px}
+.prop2 .row{margin-top:6px}
+.prop2 input{max-width:260px;padding:6px 9px;font-size:13px}
+.sess-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.sess-head h2{flex:1;font-size:19px}
+.cols .card{box-shadow:none}
+.recap{font-size:14px;color:var(--ink-2);margin:0 0 6px;padding:0;list-style:none}
+.recap li{margin:2px 0}
+details.earlier{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0}
+details.earlier > summary{padding:12px 16px;list-style:none;display:flex;gap:10px;align-items:center}
+details.earlier > summary::-webkit-details-marker{display:none}
+details.earlier > summary:before{content:"▸";color:var(--muted)}
+details.earlier[open] > summary:before{content:"▾"}
+details.earlier .inner{padding:0 16px 14px}
+.stand .big-q{font-family:var(--serif);font-size:20px;line-height:1.3;margin:2px 0 8px}
+.mini{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:7px 0;border-top:1px solid var(--line)}
+.mini:first-of-type{border-top:0}
+.drawer .g2{grid-template-columns:1fr}
+.step .gate.gbad{color:var(--bad);font-weight:500}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.sub{font-size:13px;color:var(--muted)}
+@media (max-width:980px){.work{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .tabs{display:none}
+  .modes{grid-template-columns:1fr}
+  .fields{grid-template-columns:1fr}
+  .bottomnav{grid-template-columns:repeat(4,1fr)}
+  .startrow select{width:100%}
+  .startrow .btn.big{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#/"><span class="dot"></span>EVO</a>
+  <select id="projSel" class="proj-select hide-sm" aria-label="Project"></select>
+  <nav class="tabs" id="tabs"></nav>
+  <span class="spacer"></span>
+  <button class="iconbtn" id="helpBtn" title="How EVO works" aria-label="How EVO works"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></button>
+  <button class="iconbtn" id="memBtn" title="What EVO remembers" aria-label="Memory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></button>
+  <button class="iconbtn" id="setBtn" title="Settings and demo tools" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+  <button class="iconbtn" id="themeBtn" title="Switch light / dark" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</header>
+<div class="shell"><main id="view"><div class="empty">Loading…</div></main></div>
+<nav class="bottomnav" id="bottomnav"></nav>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-live="polite"><header><h2 id="drawerTitle"></h2><button class="iconbtn" id="drawerClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header><div class="body" id="drawerBody"></div></aside>
+<div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+<div class="toast-wrap" id="toasts"></div>
+<div class="pop" id="pop"></div>
+<script>
+"use strict";
+const TOKEN = document.querySelector('meta[name="evo-token"]').content;
+const S = {projects: [], onboarding: [], settings: null, pid: null, page: "work", data: null, version: null,
+           job: null, jobPoll: null, curveMode: "mean", hidden: new Set(), drawer: null, drawerFn: null, open: new Set(),
+           task: {mode: "review", param: "", value: "", seeds: "3", note: "", provider: null, compare: false}};
+const $ = (s, el = document) => el.querySelector(s);
+const esc = v => (v === null || v === undefined ? "" : String(v)).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const fmt = (v, d = 1) => v === null || v === undefined || isNaN(v) ? "–" : Number(v).toFixed(d).replace("-", "−");
+const plural = (n, w, p) => `${n} ${n === 1 ? w : (p || w + "s")}`;
+
+/* ---------- glossary ---------- */
+const GLOSS = {
+  baseline: ["Baseline", "The project's default PPO settings. Every other config is judged against it."],
+  seed: ["Seed", "One training run with a different random start. RL results vary a lot between seeds, so one good seed proves little."],
+  config: ["Config", "A set of hyperparameters, written as the change from the baseline (e.g. learning_rate=0.003). Its seeds are grouped together."],
+  cycle: ["Review cycle", "One pass of EVO: read new results, analyse them, then the planner picks actions one at a time (up to 8) and the cycle ends. The program then exits; the next cycle starts from evo.db."],
+  hypothesis: ["Hypothesis", "A claim EVO writes into memory so a later cycle can test it, e.g. 'learning_rate=0.003 beats the baseline'. It stays open until you approve closing it."],
+  gate: ["Policy gate", "Plain code that checks every action the planner picks: inside the approved search space, within budget, citing evidence that exists, not repeating rejected ideas. Refused actions change nothing."],
+  ci: ["95% interval", "The range the true difference probably lies in, from bootstrapping the seeds. If it includes zero, EVO says it can't tell yet."],
+  memory: ["Memory", "Everything in evo.db: approved facts, runs and score versions, hypotheses, lessons, your approvals and rejections, and every past decision. With memory off, the planner sees only this cycle's run folders."],
+  proposal: ["Proposal", "Something EVO wants to do that needs you: launch runs, add seeds, close a hypothesis. Nothing happens until you approve."],
+  lesson: ["Lesson", "A rule EVO learned (e.g. avoid learning_rate ≥ 0.003 because it collapsed). It steers future proposals; you can reject it."],
+  planner: ["Planner", "Chooses EVO's next action. Either an LLM (via an OpenAI-compatible API) or the offline rules (deterministic, no API)."],
+  score: ["Score", "Mean evaluation return over the last 5 evaluations of a run. LunarLander counts ≥100 as reaching the target."],
+};
+const T = (k, label) => `<span class="term" data-term="${k}">${esc(label || GLOSS[k][0].toLowerCase())}</span>`;
+
+/* ---------- icons ---------- */
+const IC = {};
+const icon = k => "";
+const PAGES = [["work", "Work"], ["results", "Results"]];
+
+/* ---------- api ---------- */
+async function api(path, body) {
+  const opt = body === undefined ? {} : {method: "POST", headers: {"Content-Type": "application/json", "X-EVO-Token": TOKEN}, body: JSON.stringify(body)};
+  let r;
+  try { r = await fetch(path, opt); } catch (e) { throw new Error("Can't reach the EVO server. Is `evo serve` still running?"); }
+  const j = await r.json().catch(() => ({error: "bad response"}));
+  if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+  return j;
+}
+function toast(msg, err) {
+  const t = document.createElement("div");
+  t.className = "toast" + (err ? " err" : "");
+  t.textContent = msg;
+  $("#toasts").appendChild(t);
+  setTimeout(() => t.remove(), err ? 7000 : 4200);
+}
+async function doAct(action, body, opts = {}) {
+  try {
+    const r = await api(`/api/p/${encodeURIComponent(S.pid)}/${action}`, body || {});
+    if (r.message) toast(r.message, r.ok === false);
+    await refresh(true);
+    return r;
+  } catch (e) { toast(e.message, true); }
+}
+
+/* ---------- theme ---------- */
+function setTheme(t) { if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); try { t ? localStorage.setItem("evo-theme", t) : localStorage.removeItem("evo-theme"); } catch (e) {} if (S.data) drawCharts(); }
+try { const t = localStorage.getItem("evo-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+$("#themeBtn").onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark" || (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+  setTheme(dark ? "light" : "dark");
+};
+
+/* ---------- routing ---------- */
+function route() {
+  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const pid = parts[0] ? decodeURIComponent(parts[0]) : null;
+  let page = (parts[1] || "work").split("#")[0];
+  if (page === "home") page = "work";
+  if (!PAGES.some(p => p[0] === page)) page = "work";
+  return {pid, page};
+}
+function go(page) { location.hash = `#/${encodeURIComponent(S.pid)}/${page}`; }
+window.addEventListener("hashchange", () => boot(false));
+
+async function boot(first) {
+  const r = route();
+  if (first || !S.projects.length) {
+    try {
+      const p = await api("/api/projects");
+      S.projects = p.projects; S.onboarding = p.onboarding; S.settings = p.settings;
+    } catch (e) { $("#view").innerHTML = `<div class="callout bad">${esc(e.message)}</div>`; return; }
+  }
+  renderProjSel();
+  if (!S.projects.length) { S.pid = null; S.data = null; renderNav(); renderOnboarding(); return; }
+  const pid = r.pid && S.projects.some(p => p.project_id === r.pid) ? r.pid : S.projects[0].project_id;
+  if (pid !== r.pid) { location.replace(`#/${encodeURIComponent(pid)}/${r.page}`); return; }
+  const changed = pid !== S.pid;
+  S.pid = pid; S.page = r.page;
+  if (changed) { S.job = null; S.task.param = ""; }
+  if (changed || !S.data) { S.data = null; await refresh(true); } else render();
+  window.scrollTo(0, 0);
+}
+
+async function refresh(force) {
+  if (!S.pid) return;
+  try {
+    const d = await api(`/api/p/${encodeURIComponent(S.pid)}`);
+    S.data = d; S.settings = d.settings; S.version = null;
+    render();
+    if (d.job && d.job.status === "running" && !S.jobPoll) watchJob(d.job.id);
+  } catch (e) { toast(e.message, true); }
+}
+async function pollVersion() {
+  if (!S.pid || !S.data || document.hidden) return;
+  try {
+    const v = (await api(`/api/p/${encodeURIComponent(S.pid)}/version`)).version;
+    if (S.version && v !== S.version) {
+      const a = document.activeElement;
+      const typing = a && ["INPUT", "TEXTAREA", "SELECT"].includes(a.tagName) && ($("#view").contains(a) || $("#drawer").contains(a));
+      if (!typing) await refresh(true); else return;
+    }
+    S.version = v;
+  } catch (e) {}
+}
+setInterval(pollVersion, 2500);
+
+/* ---------- chrome ---------- */
+function renderProjSel() {
+  const sel = $("#projSel");
+  sel.innerHTML = S.projects.map(p => `<option value="${esc(p.project_id)}"${p.project_id === S.pid ? " selected" : ""}>${esc(p.name)}</option>`).join("")
+    + `<option value="__new">+ Onboard a project…</option>`;
+  sel.onchange = () => { if (sel.value === "__new") { renderOnboarding(); sel.value = S.pid || ""; } else location.hash = `#/${encodeURIComponent(sel.value)}/work`; };
+  sel.style.display = S.projects.length ? "" : "none";
+}
+const shortModel = m => (m || "").split("/").pop();
+function renderNav() {
+  const has = !!S.pid;
+  const n = S.data ? S.data.proposals.filter(p => p.status === "pending").length : 0;
+  $("#tabs").innerHTML = has ? PAGES.map(([k, l]) => `<a href="#/${encodeURIComponent(S.pid)}/${k}" class="${S.page === k ? "on" : ""}">${l}${k === "work" && n ? ` <span class="pill p-accent">${n}</span>` : ""}</a>`).join("") : "";
+  const sv = {work: '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', results: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'};
+  const svg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  $("#bottomnav").innerHTML = has ? PAGES.map(([k, l]) => `<a href="#/${encodeURIComponent(S.pid)}/${k}" class="${S.page === k ? "on" : ""}">${svg(sv[k])}<span>${l}</span>${k === "work" && n ? `<span class="count">${n}</span>` : ""}</a>`).join("")
+    + `<a href="#" data-open="memory">${svg('<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>')}<span>Memory</span></a>`
+    + `<a href="#" data-open="settings">${svg('<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>')}<span>Settings</span></a>` : "";
+  ["helpBtn", "memBtn", "setBtn"].forEach(id => $("#" + id).style.display = has || id === "helpBtn" ? "" : "none");
+  $("#bottomnav").querySelectorAll("[data-open]").forEach(a => a.onclick = e => { e.preventDefault(); a.dataset.open === "memory" ? openMemory() : openSettings(); });
+}
+$("#helpBtn").onclick = () => openHow();
+$("#memBtn").onclick = () => openMemory();
+$("#setBtn").onclick = () => openSettings();
+
+/* ---------- helpers on data ---------- */
+const D = () => S.data;
+function groupLabel(ref) {
+  const h = String(ref || "").replace(/^group:/, "");
+  const g = D().groups.find(g => g.group.startsWith(h) || h.startsWith(g.group));
+  return g ? g.label : h;
+}
+function groupByHash(h) { return D().groups.find(g => g.group === h); }
+function colorOf(g) { return !g || g.is_baseline ? "var(--base-line)" : `var(--s${(g.slot || 0) % 8})`; }
+function changeText(ch) { if (!ch || !Object.keys(ch).length) return "baseline"; return Object.entries(ch).map(([k, v]) => `${k}=${v}`).join(", "); }
+function verdictPill(g) {
+  if (g.is_baseline) return `<span class="pill p-muted">reference</span>`;
+  const m = {better: ["p-good", "Better than baseline"], worse: ["p-bad", "Worse than baseline"], uncertain: ["p-warn", "Can't tell yet"], insufficient_seeds: ["p-muted", "Too few seeds"]};
+  const [c, t] = m[g.verdict] || ["p-muted", "No verdict"];
+  return `<span class="pill ${c}">${t}</span>`;
+}
+function verdictText(g) {
+  const ms = D().project.min_seeds || 3;
+  if (g.is_baseline) return `The reference every config is compared with. ${plural(g.n || 0, "finished seed")}.`;
+  const d = g.diff_mean, ci = g.diff_ci95;
+  if (g.verdict === "insufficient_seeds") return `Only ${plural(g.n || 0, "finished seed")}; EVO needs ${ms} before judging it${g.pending ? ` (${g.pending} more on the way)` : ""}.`;
+  if (g.verdict === "uncertain") return `Averages ${fmt(d)} ${d >= 0 ? "above" : "below"} the baseline, but the seeds disagree: the 95% range [${fmt(ci && ci[0])}, ${fmt(ci && ci[1])}] includes zero.`;
+  if (g.verdict === "better") return `Beats the baseline by ${fmt(d)} on average, and the 95% range [${fmt(ci[0])}, ${fmt(ci[1])}] stays above zero.`;
+  if (g.verdict === "worse") return `Falls ${fmt(Math.abs(d))} below the baseline, and the 95% range [${fmt(ci[0])}, ${fmt(ci[1])}] stays below zero.`;
+  return "Not analysed yet.";
+}
+function refChip(ref) {
+  const [kind, ...rest] = String(ref).split(":"); const val = rest.join(":");
+  const known = {run: () => D().curves.some(c => c.run === val), hyp: () => D().hypotheses.some(h => h.label === val), group: () => D().groups.some(g => g.group.startsWith(val) || val.startsWith(g.group))};
+  let title = "";
+  if (kind === "group") title = groupLabel(val);
+  else if (kind === "kb") title = "knowledge note";
+  else if (kind === "diag") title = "finding";
+  else if (kind === "lesson") title = "lesson";
+  else if (kind === "fact") title = "project fact";
+  if (kind === "run" && known.run()) return `<a class="chip" data-run="${esc(val)}" title="Open run">${esc(ref)}</a>`;
+  if (kind === "hyp" && known.hyp()) return `<a class="chip" data-mem="1" title="Open memory">${esc(ref)}</a>`;
+  if (kind === "group" && known.group()) return `<span class="chip" title="${esc(ref)}">${esc("group:" + title)}</span>`;
+  return `<span class="chip" title="${esc(title)}">${esc(ref)}</span>`;
+}
+function groupByPrefix(v) { const g = D().groups.find(g => g.group.startsWith(v) || v.startsWith(g.group)); return g ? g.group : v; }
+const chips = refs => (refs || []).map(refChip).join("");
+function when(iso) {
+  if (!iso) return "";
+  const d = new Date(iso); if (isNaN(d)) return esc(iso);
+  return d.toLocaleString(undefined, {day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"});
+}
+
+/* plain-language narration of one planner step */
+function narrate(d) {
+  const a = d.arguments || {};
+  const s = {
+    search_knowledge: () => `Looked up its notes on “${esc(a.query)}”.`,
+    inspect_run: () => `Opened run <b>${esc(a.run)}</b> to check its curve and log.`,
+    compare_runs: () => `Compared every config against the baseline.`,
+    open_hypothesis: () => `Wrote down a claim to test: “${esc(a.statement)}”`,
+    propose_runs: () => `Asked you to approve ${plural(+a.seeds || 0, "new run")} of <b>${esc(changeText(a.change))}</b>${a.hypothesis ? ` to test ${esc(a.hypothesis)}` : ""}.`,
+    request_seeds: () => `Asked you to approve ${plural(+a.seeds || 0, "more seed")} of <b>${esc(groupLabel(a.group))}</b>.`,
+    resolve_hypothesis: () => `Proposed closing ${esc(a.hypothesis)} as <b>${esc(a.outcome)}</b>.`,
+    ask_user: () => `Stopped to ask you: “${esc(a.question)}”`,
+    end_cycle: () => `Finished the cycle.`,
+  }[d.action];
+  const txt = s ? s() : `${esc(d.action)} ${esc(JSON.stringify(a))}`;
+  return d.allowed ? txt : `Tried: ${txt.replace(/^./, c => c.toLowerCase())}`;
+}
+function gateLine(d) {
+  if (d.allowed) return `<div class="gate muted">✓ ${T("gate", "Gate")} allowed it.</div>`;
+  return `<div class="gate no">✕ ${T("gate", "Gate")} refused it — nothing changed: ${esc((d.reasons || []).join("; "))}</div>`;
+}
+function stepHTML(d, opts = {}) {
+  return `<div class="step ${d.allowed ? "" : "refused"}"><div class="no">${d.step}</div><div>
+    <div class="say">${narrate(d)}</div>
+    ${d.rationale ? `<div class="why">Why: ${esc(d.rationale)}</div>` : ""}
+    ${d.evidence && d.evidence.length ? `<div style="margin-top:5px"><span class="tiny muted">Evidence </span>${chips(d.evidence)}</div>` : ""}
+    ${gateLine(d)}
+    ${opts.brief && d.brief ? `<details data-k="brief-${opts.cyc}-${d.step}"><summary>What the planner saw (its full briefing)</summary><pre>${esc(typeof d.brief === "string" ? d.brief : JSON.stringify(d.brief, null, 2))}</pre></details>` : ""}
+    ${opts.meta ? `<div class="tiny muted" style="margin-top:4px">${esc(d.provider || "")}${d.model ? " · " + esc(shortModel(d.model)) : ""}${d.latency_ms ? ` · ${(d.latency_ms / 1000).toFixed(1)} s` : ""}</div>` : ""}
+  </div></div>`;
+}
+
+/* ---------- render dispatch ---------- */
+function render() {
+  renderNav();
+  if (!S.data) return;
+  const v = $("#view");
+  v.querySelectorAll("details[open][data-k]").forEach(d => S.open.add(d.dataset.k));
+  v.innerHTML = S.page === "results" ? pageResults() : pageWork();
+  v.querySelectorAll("details[data-k]").forEach(d => { if (S.open.has(d.dataset.k)) d.open = true; d.addEventListener("toggle", () => d.open ? S.open.add(d.dataset.k) : S.open.delete(d.dataset.k)); });
+  wire(v);
+  drawCharts();
+  if (S.drawerFn && $("#drawer").classList.contains("on")) {
+    const b = $("#drawerBody"), a = document.activeElement;
+    if (!(a && b.contains(a) && ["INPUT", "TEXTAREA", "SELECT"].includes(a.tagName))) {
+      const y = b.scrollTop; b.querySelectorAll("details[open][data-k]").forEach(d => S.open.add(d.dataset.k));
+      b.innerHTML = S.drawerFn(); b.querySelectorAll("details[data-k]").forEach(d => { if (S.open.has(d.dataset.k)) d.open = true; d.addEventListener("toggle", () => d.open ? S.open.add(d.dataset.k) : S.open.delete(d.dataset.k)); });
+      wire(b); b.scrollTop = y;
+    }
+  }
+}
+function wire(root) {
+  root.querySelectorAll("[data-act]").forEach(b => b.onclick = e => { e.preventDefault(); runAction(b.dataset.act, b); });
+  root.querySelectorAll("[data-run]").forEach(b => b.onclick = e => { e.preventDefault(); openRun(b.dataset.run); });
+  root.querySelectorAll("[data-mem]").forEach(b => b.onclick = e => { e.preventDefault(); openMemory(); });
+}
+function runAction(a) {
+  if (!a) return;
+  if (a === "cycle") { closeDrawer(); if (S.page !== "work") go("work"); setTimeout(() => { const el = $("#taskCard"); if (el) el.scrollIntoView({behavior: "smooth", block: "center"}); }, 80); return; }
+  if (a === "compare") { S.task.compare = true; return runAction("cycle"); }
+  if (a === "memory") return openMemory();
+  if (a === "settings") return openSettings();
+  if (a.startsWith("goto:")) { closeDrawer(); return go("work"); }
+  if (a.startsWith("stage:")) return doAct("stage", {set: a.slice(6)});
+}
+
+/* ---------- WORK ---------- */
+const OFFLINE = "offline";
+function provChoices() {
+  const s = S.settings, out = [];
+  if (s.key_present) {
+    const models = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
+    (models.includes(s.model) ? models : [s.model, ...models]).forEach(m =>
+      out.push(["llm:" + m, shortModel(m) + (m.endsWith("120b") ? " · most reliable" : m.endsWith("20b") ? " · faster, weaker" : "")]));
+  }
+  out.push([OFFLINE, "Offline rules · instant"]);
+  return out;
+}
+function curProv() {
+  const ch = provChoices().map(c => c[0]);
+  if (S.task.provider && ch.includes(S.task.provider)) return S.task.provider;
+  const s = S.settings, def = s.provider === "openai_compat" && s.key_present ? "llm:" + s.model : OFFLINE;
+  return ch.includes(def) ? def : OFFLINE;
+}
+function spaceKeys() { return Object.keys(D().project.search_space || {}).sort((a, b) => (b === "learning_rate") - (a === "learning_rate")); }
+function spaceHint(k) {
+  const sp = (D().project.search_space || {})[k], b = (D().project.baseline || {})[k];
+  if (!sp) return "";
+  const r = sp.choices ? `one of ${sp.choices.join(", ")}` : `${sp.min} to ${sp.max}`;
+  return `Allowed: ${r}. Baseline: ${b}.`;
+}
+const running = () => !!(S.job && S.job.status === "running" && S.job.project === S.pid);
+function taskLabel(t) {
+  if (!t) return "";
+  const p = [];
+  if (t.change) p.push(`Test ${changeText(t.change)}${t.seeds ? ` (${plural(+t.seeds, "seed")})` : ""}`);
+  if (t.text) p.push(`“${t.text}”`);
+  return p.join(" · ");
+}
+function pendingProps() { return D().proposals.filter(p => p.status === "pending"); }
+
+function pageWork() {
+  const d = D(), p = d.project;
+  return `<div class="hello"><h1>${esc(p.name)}</h1><p>${esc(p.goal)}</p></div>
+  <div class="work"><div>${needsCard()}${taskCard()}<div id="session">${sessionCard()}</div>${earlierWork()}</div>
+  <aside>${standCard()}</aside></div>`;
+}
+
+function needsCard() {
+  const pend = pendingProps(); if (!pend.length) return "";
+  const left = (+D().project.budget || 0) - D().stats.agent_runs - D().stats.reserved;
+  return `<div class="card needs"><h2>Waiting for your OK <span class="pill p-accent">${pend.length}</span></h2>
+    ${pend.map(p => `<div class="prop2"><div class="ask">${propAsk(p)}</div><div class="why">${esc(p.rationale)}</div>
+      <div class="sub">${esc(consequence(p))}${p.kind === "runs" ? ` Run budget left after this: ${left}.` : ""}</div>
+      <div class="row"><button class="btn good sm" data-approve="${p.id}">Approve</button><button class="btn bad sm" data-reject="${p.id}">Reject</button><input id="cm-${p.id}" placeholder="Comment (optional)"></div></div>`).join("")}</div>`;
+}
+
+function taskCard() {
+  const d = D(), t = S.task, keys = spaceKeys(), prov = curProv(), busy = running();
+  if (!t.param || !keys.includes(t.param)) t.param = keys[0] || "";
+  const n = d.disk.new_folders.length;
+  const llm = prov !== OFFLINE;
+  return `<div class="card task" id="taskCard"><h2>What should EVO work on?</h2>
+    <div class="modes">
+      <button class="mode ${t.mode === "review" ? "on" : ""}" data-mode="review"><b>Review my results</b><span>${n ? `Read ${plural(n, "new run folder")}, then decide the next step` : "Re-check the results and follow up open ideas"}</span></button>
+      <button class="mode ${t.mode === "change" ? "on" : ""}" data-mode="change"><b>Test a change</b><span>Pick one setting and a value to try</span></button>
+    </div>
+    ${t.mode === "change" ? `<div class="fields">
+      <div><label class="f" for="tp" style="margin-top:0">Setting</label><select id="tp" data-f="param">${keys.map(k => `<option ${k === t.param ? "selected" : ""}>${esc(k)}</option>`).join("")}</select></div>
+      <div><label class="f" for="tv" style="margin-top:0">Try this value</label><input id="tv" data-f="value" value="${esc(t.value)}" placeholder="e.g. 0.001" autocomplete="off"></div>
+      <div><label class="f" for="ts" style="margin-top:0">Seeds</label><input id="ts" data-f="seeds" type="number" min="1" max="10" value="${esc(t.seeds)}"></div></div>
+      <div class="hint">${esc(spaceHint(t.param))} Anything outside the approved range is refused by the safety gate.</div>` : ""}
+    <label class="f" for="tn">Note for EVO <span class="muted" style="font-weight:400">(optional)</span></label>
+    <input id="tn" data-f="note" value="${esc(t.note)}" ${llm ? "" : "disabled"} placeholder="${llm ? "e.g. I don't trust the lucky learning-rate run" : "Notes are read by the LLM planner only"}" autocomplete="off">
+    <div class="startrow"><select id="tprov" data-f="provider" aria-label="Who decides">${provChoices().map(([v, l]) => `<option value="${esc(v)}" ${v === prov ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
+      <button class="btn primary big" id="startBtn" ${busy ? "disabled" : ""}>${busy ? '<span class="spin"></span> Working…' : "Start"}</button></div>
+    <label class="chk"><input type="checkbox" data-f="compare" ${t.compare ? "checked" : ""}> Also try it without memory and show both side by side (nothing is saved)</label></div>`;
+}
+
+function standCard() {
+  const d = D(), b = bestGroup(), base = d.groups.find(g => g.is_baseline) || {};
+  const budget = +d.project.budget || 0, used = d.stats.agent_runs, res = d.stats.reserved;
+  const open = d.hypotheses.filter(h => h.status === "open").length, les = d.lessons.filter(l => l.status === "current").length;
+  const rej = d.proposals.filter(p => p.status === "rejected").length;
+  const n = d.disk.new_folders.length; const sets = d.disk.fixture_sets.filter(s => !s.staged);
+  return `<div class="card stand"><div class="sub" style="font-weight:600">Best so far</div>
+      ${b ? `<div class="big-q">${esc(b.g.label)}</div><div>${verdictPill(b.g)}</div>
+        <p class="small" style="color:var(--ink-2);margin:8px 0 0">Average ${fmt(b.g.mean)} vs the baseline's ${fmt(base.mean)}. ${esc(verdictText(b.g))}</p>` : `<p class="muted small">No runs to compare yet.</p>`}
+      <button class="btn sm" style="margin-top:12px" data-goto="results">See all results</button></div>
+    <div class="card"><div class="row between"><div class="sub" style="font-weight:600">Run budget</div><span class="small">${used + res} of ${budget}</span></div>
+      <div class="meter"><i style="width:${budget ? 100 * used / budget : 0}%;background:var(--accent)"></i><i style="width:${budget ? 100 * res / budget : 0}%;background:color-mix(in srgb,var(--accent) 35%,transparent)"></i></div></div>
+    <div class="card"><div class="sub" style="font-weight:600;margin-bottom:4px">EVO remembers</div>
+      <div class="mini"><span>Open ideas</span><b>${open}</b></div><div class="mini"><span>Lessons</span><b>${les}</b></div><div class="mini"><span>Proposals you rejected</span><b>${rej}</b></div>
+      <button class="btn sm" style="margin-top:10px" data-act="memory">Open memory</button></div>
+    <div class="card flat"><div class="sub" style="font-weight:600">New results</div><p class="small" style="margin:4px 0 0">${n ? `${plural(n, "run folder")} waiting to be read.` : "Nothing new since the last review."}</p>
+      ${sets.length ? `<button class="btn sm" style="margin-top:10px" data-act="stage:${esc(sets[0].name)}">Add demo results (${esc(sets[0].name)})</button>` : ""}</div>`;
+}
+
+/* ---- sessions (live or saved) ---- */
+function outcomeText(decs, fallback) {
+  const a = [...decs].reverse().find(x => x.allowed && ["propose_runs", "request_seeds", "resolve_hypothesis", "ask_user"].includes(x.action));
+  if (a) return narrate(a).replace(/^Asked you to approve/, "Waiting for your OK:").replace(/^Proposed closing/, "Waiting for your OK to close");
+  const last = [...decs].reverse().find(x => x.allowed && x.action === "end_cycle");
+  return esc((last && last.arguments && last.arguments.summary) || fallback || "");
+}
+function readLines(c) {
+  const rd = c.read || {new: [], updated: [], findings: []}, out = [];
+  const fk = {untrusted_instruction: r => `Found instruction-like text in ${r}'s log and treated it as data, not a command.`, incomplete: r => `${r} stopped early, so it isn't counted.`, collapse: r => `${r} collapsed (learned, then lost it).`};
+  out.push(rd.new.length || rd.updated.length ? `Read ${[rd.new.length ? plural(rd.new.length, "new run") : "", rd.updated.length ? `the results of ${plural(rd.updated.length, "run")} you approved earlier` : ""].filter(Boolean).join(" and ")}.` : "No new results to read.");
+  rd.findings.filter(f => fk[f.kind]).forEach(f => out.push(fk[f.kind](f.run || "a run")));
+  return out;
+}
+function stepRow(x, k) {
+  return `<div class="step ${x.allowed ? "" : "refused"}"><div class="no">${x.step}</div><div>
+    <div class="say">${narrate(x)}</div>${x.rationale ? `<div class="why">${esc(x.rationale)}</div>` : ""}
+    ${x.allowed ? "" : `<div class="gate gbad">✕ Refused by the safety gate, nothing changed: ${esc((x.reasons || []).join("; "))}</div>`}
+    <details data-k="ev-${k}-${x.step}"><summary>Evidence and details</summary>
+      <div style="margin-top:4px">${x.evidence && x.evidence.length ? chips(x.evidence) : '<span class="tiny muted">no evidence cited</span>'}</div>
+      ${x.brief ? `<details data-k="br-${k}-${x.step}"><summary>What the planner saw</summary><pre>${esc(typeof x.brief === "string" ? x.brief : JSON.stringify(x.brief, null, 2))}</pre></details>` : ""}
+      <div class="tiny muted" style="margin-top:4px">${esc(x.provider || "")}${x.model ? " · " + esc(shortModel(x.model)) : ""}${x.latency_ms ? ` · ${(x.latency_ms / 1000).toFixed(1)} s` : ""}</div></details></div></div>`;
+}
+function liveLeg(l, j) {
+  const pre = l.events.filter(e => /^ingested/.test(e)).map(e => { const m = e.match(/(\d+) new, (\d+) updated/); return m ? `Read ${m[1]} new and ${m[2]} updated runs.` : e; });
+  const flags = l.events.filter(e => /^flagged/.test(e)).map(e => "Found instruction-like text in a log and treated it as data.");
+  const next = (l.decisions.length ? l.decisions[l.decisions.length - 1].step : 0) + 1, runn = l.status === "running";
+  const res = l.result && l.result.summary;
+  return `<ul class="recap">${pre.concat(flags).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    ${l.decisions.map(x => stepRow(x, "live" + l.name)).join("")}
+    ${runn ? `<div class="thinking"><span class="spin"></span><div>${j.provider === "offline" ? "Offline rules are deciding" : `Asking ${esc(shortModel(j.model))}`} (step ${next})…${j.provider === "offline" ? "" : `<div class="tiny">Free-tier limits can add short waits; EVO retries by itself.</div>`}</div></div>` : ""}
+    ${l.status === "waiting" ? `<div class="empty small">Starts after the first one.</div>` : ""}
+    ${!runn && res ? `<div class="outcome"><b>Result:</b> ${outcomeText(l.decisions, res.recommendation)}${(res.planner && res.planner.llm_errors || []).length ? `<div class="small" style="color:var(--bad);margin-top:4px">The model could not be reached: ${esc(res.planner.llm_errors.join("; ").slice(0, 240))}</div>` : ""}</div>` : ""}
+    ${l.error ? `<div class="callout bad" style="margin-top:8px">${esc(l.error)}</div>` : ""}`;
+}
+function cycleBody(c) {
+  return `<ul class="recap">${readLines(c).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+    ${c.decisions.map(x => stepRow(x, "c" + c.number)).join("")}
+    ${c.recommendation ? `<div class="outcome"><b>Result:</b> ${outcomeText(c.decisions, c.recommendation)}</div>` : ""}`;
+}
+function shownCycle() {
+  const d = D(), j = S.job;
+  if (j && j.project === S.pid && j.kind === "cycle" && j.status !== "running" && j.legs[0].cycle) return d.cycles.find(c => c.number === j.legs[0].cycle) || null;
+  return null;
+}
+function sessionCard() {
+  const d = D(), j = S.job && S.job.project === S.pid ? S.job : null;
+  if (j && j.status === "running" || (j && j.kind === "compare")) {
+    const head = `<div class="sess-head"><h2>${j.kind === "compare" ? "With memory vs without" : "EVO is working"}</h2>
+      ${j.status === "running" ? `<span class="live"><span class="spin"></span>${mmss(j.elapsed)}</span>` : `<span class="pill ${j.status === "done" ? "p-good" : "p-bad"}">${j.status === "done" ? "done" : "error"}</span>`}
+      <span class="pill p-muted">${j.provider === "offline" ? "offline rules" : esc(shortModel(j.model))}</span></div>
+      ${j.task ? `<div class="sub" style="margin-bottom:8px">Task: ${esc(taskLabel(j.task))}</div>` : ""}`;
+    if (j.kind === "compare") return `<div class="card">${head}<p class="sub" style="margin-top:0">Same results, same planner. Neither side is saved.</p>
+      <div class="cols">${j.legs.map(l => `<div class="card flat"><h3>${l.memory === "on" ? "With memory" : "Without memory"}</h3>${liveLeg(l, j)}</div>`).join("")}</div></div>`;
+    return `<div class="card">${head}${liveLeg(j.legs[0], j)}</div>`;
+  }
+  const c = shownCycle() || d.cycles[d.cycles.length - 1];
+  if (!c) return `<div class="card flat empty">Nothing has run yet. Start a review above.</div>`;
+  const pl = c.planner || {};
+  return `<div class="card"><div class="sess-head"><h2>${shownCycle() ? "Just finished" : "Last review"}: cycle ${c.number}</h2><span class="sub">${when(c.ended_at || c.started_at)}</span>
+    <span class="pill p-muted">${pl.provider === "offline" ? "offline rules" : esc(shortModel(pl.model) || "planner")}</span></div>
+    ${c.task ? `<div class="sub" style="margin-bottom:8px">Task: ${esc(taskLabel(c.task))}</div>` : ""}${cycleBody(c)}</div>`;
+}
+function earlierWork() {
+  const d = D(), j = S.job && S.job.project === S.pid ? S.job : null;
+  const live = j && j.status === "running";
+  const cur = live ? null : (shownCycle() || d.cycles[d.cycles.length - 1]);
+  const list = [...d.cycles].reverse().filter(c => !cur || c.number !== cur.number);
+  if (!list.length) return "";
+  return `<div class="section" style="margin-top:22px"><h3 style="margin-bottom:8px">Earlier work</h3><div class="stack">${list.map(c => `<details class="earlier" data-k="earl-${c.number}"><summary><b>Cycle ${c.number}</b><span class="sub">${when(c.started_at)}</span><span style="flex:1;min-width:0;color:var(--ink-2);font-size:14px">${c.task ? esc(taskLabel(c.task)) : outcomeText(c.decisions, c.recommendation)}</span></summary><div class="inner">${cycleBody(c)}</div></details>`).join("")}</div></div>`;
+}
+function renderSession() { const el = $("#session"); if (el && S.page === "work") { el.querySelectorAll("details[open][data-k]").forEach(d => S.open.add(d.dataset.k)); el.innerHTML = sessionCard(); el.querySelectorAll("details[data-k]").forEach(d => { if (S.open.has(d.dataset.k)) d.open = true; d.addEventListener("toggle", () => d.open ? S.open.add(d.dataset.k) : S.open.delete(d.dataset.k)); }); wire(el); } }
+
+/* ---- start a task ---- */
+async function startTask() {
+  const t = S.task, prov = curProv(), task = {};
+  if (t.mode === "change") {
+    if (!String(t.value).trim()) { toast("Enter the value you want EVO to try.", true); const el = $("#tv"); if (el) el.focus(); return; }
+    task.change = {[t.param]: String(t.value).trim()};
+    if (t.seeds) task.seeds = +t.seeds;
+  }
+  if (t.note.trim() && prov !== OFFLINE) task.text = t.note.trim();
+  try {
+    let provider = "offline";
+    if (prov !== OFFLINE) {
+      const model = prov.slice(4);
+      if (model !== S.settings.model) S.settings = (await api("/api/settings", {model})).settings;
+      provider = "openai_compat";
+    }
+    const r = await api(`/api/p/${encodeURIComponent(S.pid)}/${t.compare ? "compare" : "cycle"}`, {provider, memory: "on", task: Object.keys(task).length ? task : null});
+    t.note = ""; S.job = null;
+    watchJob(r.job);
+    setTimeout(() => { const el = $("#session"); if (el) el.scrollIntoView({behavior: "smooth", block: "start"}); }, 350);
+  } catch (e) { toast(e.message, true); }
+}
+function watchJob(id) {
+  clearInterval(S.jobPoll);
+  const tick = async () => {
+    let j; try { j = await api(`/api/job/${id}`); } catch (e) { return; }
+    const was = S.job && S.job.status; S.job = j;
+    if (j.status === "running") { if (was !== "running") render(); else renderSession(); return; }
+    clearInterval(S.jobPoll); S.jobPoll = null;
+    await refresh(true);
+    toast(j.status === "done" ? (j.kind === "compare" ? "Comparison finished." : "EVO finished. Check “Waiting for your OK”.") : "The run stopped with an error.", j.status !== "done");
+  };
+  S.jobPoll = setInterval(tick, 1000); tick();
+}
+function mmss(s) { s = Math.round(s); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+
+document.addEventListener("input", e => { const f = e.target.dataset && e.target.dataset.f; if (!f || !(f in S.task)) return; S.task[f] = e.target.type === "checkbox" ? e.target.checked : e.target.value; if (f === "provider") render(); if (f === "param") { const h = $(".hint"); if (h) h.textContent = spaceHint(S.task.param) + " Anything outside the approved range is refused by the safety gate."; } });
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-mode]"); if (m) { S.task.mode = m.dataset.mode; render(); return; }
+  const g = e.target.closest("[data-goto]"); if (g) { go(g.dataset.goto); return; }
+  if (e.target.closest("#startBtn")) { startTask(); }
+});
+
+function actButton(a, primary) {
+  const label = a === "cycle" ? "Go to the task box" : a === "compare" ? "Compare memory on vs off" : a.startsWith("goto:") ? "Go to Work" : a.startsWith("stage:") ? `Add the '${a.slice(6)}' runs` : "Go";
+  return `<button class="btn ${primary ? "primary" : ""} sm" data-act="${esc(a)}">${esc(label)}</button>`;
+}
+function bestGroup() {
+  const gs = D().groups.filter(g => !g.is_baseline && g.mean !== null && g.mean !== undefined);
+  const better = gs.filter(g => g.verdict === "better").sort((a, b) => b.mean - a.mean);
+  if (better.length) return {g: better[0], proven: true};
+  gs.sort((a, b) => b.mean - a.mean);
+  return gs.length ? {g: gs[0], proven: false} : null;
+}
+
+/* ---------- RESULTS ---------- */
+function resultsAnswer() {
+  const d = D(); const gs = d.groups.filter(g => !g.is_baseline);
+  if (!gs.length) return "No configs other than the baseline yet.";
+  const better = gs.filter(g => g.verdict === "better");
+  if (better.length) return `Yes: ${better.map(g => g.label).join(", ")} ${better.length > 1 ? "beat" : "beats"} the baseline with enough seeds to be sure.`;
+  const b = bestGroup();
+  const bm = (d.groups.find(g => g.is_baseline) || {}).mean;
+  if (b && b.g.mean > (bm ?? -1e9)) return `Not proven yet. ${b.g.label} leads on average (${fmt(b.g.mean)} vs the baseline's ${fmt(bm)}), but ` +
+    (b.g.verdict === "insufficient_seeds" ? `it has only ${plural(b.g.n || 0, "finished seed")} and EVO needs ${d.project.min_seeds || 3}.` : `its seeds disagree: the 95% range of the difference [${fmt((b.g.diff_ci95 || [])[0])}, ${fmt((b.g.diff_ci95 || [])[1])}] includes zero.`);
+  return "Not yet. No config beats the baseline so far.";
+}
+function pageResults() {
+  const d = D();
+  const gs = [...d.groups].sort((a, b) => (b.is_baseline - a.is_baseline) || ((b.mean ?? -1e9) - (a.mean ?? -1e9)));
+  const rows = gs.map(g => `<div class="cfg" id="grp-${esc(g.group)}">
+      <div><div class="name"><span class="sw ${g.is_baseline ? "base" : ""}" style="${g.is_baseline ? "" : `background:${colorOf(g)}`}"></span>${esc(g.label)}</div>
+        <div class="meta">${plural(g.n || 0, "seed")}${g.pending ? ` · ${g.pending} running` : ""} · mean <b style="color:var(--ink)">${fmt(g.mean)}</b></div>
+        <div style="margin-top:6px">${verdictPill(g)} ${Object.keys(g.flags || {}).map(f => `<span class="pill p-warn" title="${esc(flagHelp(f))}">${esc(f.replace(/_/g, " "))}</span>`).join(" ")}</div>
+        <div class="verdict-text">${esc(verdictText(g))}</div></div>
+      <div class="chart strip" data-group="${esc(g.group)}"></div></div>`).join("");
+  return `
+  <div class="page-head"><div><h1>Is anything better than the baseline?</h1><p>${esc(resultsAnswer())}</p></div></div>
+  <div class="card"><div class="row between"><h3>Each config, seed by seed</h3><span class="tiny muted">● one ${T("seed")} &nbsp; ┃ mean &nbsp; ⋮ baseline &nbsp; ┆ target ${fmt(d.project.target, 0)}</span></div>
+    <p class="small muted" style="margin:2px 0 6px">Score = average return over the last ${d.project.k} evaluations.</p>
+    ${rows || `<div class="empty">No runs yet.</div>`}</div>
+  <div class="card"><div class="row between"><h3>Learning curves</h3><div class="seg" id="curveSeg"><button data-m="mean" class="${S.curveMode === "mean" ? "on" : ""}">Config mean</button><button data-m="seeds" class="${S.curveMode === "seeds" ? "on" : ""}">Each seed</button></div></div>
+    <p class="small muted" style="margin:2px 0 4px">Click a config to hide it. Dashed = stopped early.</p>
+    <div class="legend" id="curveLegend"></div><div class="chart" id="curves"></div></div>
+  <div class="card"><details data-k="runs-table" ${d.curves.length <= 12 ? "open" : ""}><summary><b style="color:var(--ink)">All runs (${d.curves.length})</b></summary>
+    <div class="scroll-x"><table class="tbl" style="margin-top:8px"><thead><tr><th>Run</th><th>Config</th><th class="num">Seed</th><th>Status</th><th class="num">Score</th><th>Started by</th><th>Flags</th></tr></thead><tbody>
+    ${d.curves.map(c => { const r = d.run_rows[c.run] || {}; const g = groupByHash(c.group);
+      return `<tr><td><a href="#" data-run="${esc(c.run)}" class="mono">${esc(c.run)}</a></td><td><span class="sw ${g && g.is_baseline ? "base" : ""}" style="display:inline-block;vertical-align:-1px;${g && !g.is_baseline ? `background:${colorOf(g)}` : ""}"></span> ${esc(g ? g.label : c.group)}</td><td class="num">${esc(c.seed)}</td><td>${statusPill(c.status)}</td><td class="num">${fmt(r.score)}</td><td>${c.by === "agent" ? "EVO (approved)" : "you"}</td><td>${(r.flags || []).map(f => `<span class="pill p-warn">${esc(f)}</span>`).join(" ")}</td></tr>`; }).join("")}
+    </tbody></table></div></details></div>`;
+}
+function statusPill(s) { return `<span class="pill ${{completed: "p-good", running: "p-info", incomplete: "p-warn", failed: "p-bad", queued: "p-muted"}[s] || "p-muted"}">${esc(s)}</span>`; }
+function flagHelp(f) { return {collapse: "Learned, then lost most of what it learned.", plateau: "Stopped improving well below the target.", short_curve: "Few evaluation points so far.", running: "Still training."}[f] || f; }
+
+/* ---------- charts ---------- */
+const NS = "http://www.w3.org/2000/svg";
+function niceTicks(lo, hi, n) {
+  const span = hi - lo || 1, step0 = span / n, mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => s >= step0) || step0;
+  const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(6));
+  return out;
+}
+function drawCharts() {
+  if (S.page !== "results" || !S.data) return;
+  drawStrips(); drawCurves();
+  const seg = $("#curveSeg"); if (seg) seg.querySelectorAll("button").forEach(b => b.onclick = () => { S.curveMode = b.dataset.m; seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); drawCurves(); });
+}
+function stripDomain() {
+  const d = D(); let vals = [];
+  d.groups.forEach(g => (g.runs || []).forEach(r => { const rr = d.run_rows[r]; if (rr && rr.score !== null && rr.score !== undefined) vals.push(rr.score); }));
+  const b = d.groups.find(g => g.is_baseline); if (b && b.mean !== null) vals.push(b.mean);
+  if (d.project.target !== null && d.project.target !== undefined) vals.push(+d.project.target);
+  if (!vals.length) vals = [0, 1];
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo || 50) * .08; return [lo - pad, hi + pad];
+}
+function drawStrips() {
+  const d = D(); const [lo, hi] = stripDomain(); const base = d.groups.find(g => g.is_baseline);
+  document.querySelectorAll(".strip").forEach(el => {
+    const g = groupByHash(el.dataset.group); const W = Math.max(240, el.clientWidth), H = 58, L = 6, R = 6;
+    const x = v => L + (v - lo) / (hi - lo) * (W - L - R);
+    const pts = (g.runs || []).map(r => d.run_rows[r]).filter(r => r && r.score !== null && r.score !== undefined);
+    const ticks = niceTicks(lo, hi, 5);
+    let s = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${esc(g.label)} seed scores">`;
+    ticks.forEach(t => s += `<line x1="${x(t)}" x2="${x(t)}" y1="6" y2="${H - 18}" class="gridline"/><text x="${x(t)}" y="${H - 4}" text-anchor="middle">${fmt(t, 0)}</text>`);
+    if (d.project.target !== null && d.project.target !== undefined) s += `<line x1="${x(+d.project.target)}" x2="${x(+d.project.target)}" y1="2" y2="${H - 18}" stroke="var(--muted)" stroke-dasharray="2 3"/>`;
+    if (base && base.mean !== null) s += `<line x1="${x(base.mean)}" x2="${x(base.mean)}" y1="2" y2="${H - 18}" stroke="var(--base-line)" stroke-width="1.5" stroke-dasharray="1 2.5"/>`;
+    const col = colorOf(g);
+    pts.forEach((r, i) => { const done = r.status === "completed"; const cy = 20 + (i % 3) * 6;
+      s += `<circle cx="${x(r.score)}" cy="${cy}" r="6" fill="${done ? col : "var(--surface)"}" stroke="${col}" stroke-width="2" opacity="${done ? .9 : .7}" data-tip="${esc(r.run)} · seed ${esc(r.seed)} · score ${fmt(r.score)}${done ? "" : " (" + esc(r.status) + ", not counted)"}"></circle>`; });
+    if (g.mean !== null && g.mean !== undefined) s += `<line x1="${x(g.mean)}" x2="${x(g.mean)}" y1="6" y2="${H - 22}" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" data-tip="${esc(g.label)} mean ${fmt(g.mean)}"/>`;
+    s += `</svg><div class="tip"></div>`;
+    el.innerHTML = s; hoverTips(el);
+  });
+}
+function hoverTips(el) {
+  const tip = el.querySelector(".tip");
+  el.querySelectorAll("[data-tip]").forEach(n => {
+    n.addEventListener("mouseenter", () => { tip.innerHTML = esc(n.dataset.tip); tip.style.display = "block"; });
+    n.addEventListener("mousemove", e => { const r = el.getBoundingClientRect(); tip.style.left = Math.min(e.clientX - r.left + 12, r.width - tip.offsetWidth - 4) + "px"; tip.style.top = (e.clientY - r.top - 34) + "px"; });
+    n.addEventListener("mouseleave", () => tip.style.display = "none");
+  });
+}
+function curveSeries() {
+  const d = D(); const out = [];
+  const byG = {};
+  d.curves.forEach(c => (byG[c.group] = byG[c.group] || []).push(c));
+  Object.entries(byG).forEach(([gh, runs]) => {
+    const g = groupByHash(gh) || {group: gh, label: gh, is_baseline: false, slot: 7};
+    if (S.curveMode === "seeds") runs.forEach(r => out.push({g, name: `${g.label} · seed ${r.seed}`, pts: r.points, dash: r.status !== "completed", w: 1.6}));
+    else {
+      const done = runs.filter(r => r.status === "completed"); const use = done.length ? done : runs; const m = {};
+      use.forEach(r => r.points.forEach(p => { (m[p.x] = m[p.x] || []).push(p.y); }));
+      const pts = Object.keys(m).map(Number).sort((a, b) => a - b).map(x => ({x, y: m[x].reduce((a, b) => a + b, 0) / m[x].length}));
+      out.push({g, name: `${g.label} (${done.length} seed${done.length === 1 ? "" : "s"})`, pts, dash: !done.length, w: g.is_baseline ? 2.4 : 2.2});
+    }
+  });
+  return out;
+}
+function drawCurves() {
+  const el = $("#curves"); if (!el) return; const d = D();
+  const lg = $("#curveLegend");
+  lg.innerHTML = d.groups.map(g => `<button data-g="${esc(g.group)}" class="${S.hidden.has(g.group) ? "offl" : ""}"><span class="sw ${g.is_baseline ? "base" : ""}" style="${g.is_baseline ? "" : `background:${colorOf(g)}`}"></span>${esc(g.label)}</button>`).join("");
+  lg.querySelectorAll("button").forEach(b => b.onclick = () => { S.hidden.has(b.dataset.g) ? S.hidden.delete(b.dataset.g) : S.hidden.add(b.dataset.g); drawCurves(); });
+  const series = curveSeries().filter(s => !S.hidden.has(s.g.group) && s.pts.length);
+  const W = Math.max(300, el.clientWidth), H = W < 520 ? 240 : 320, L = 46, R = 14, Tt = 12, B = 28;
+  const all = series.flatMap(s => s.pts); if (!all.length) { el.innerHTML = `<div class="empty">No evaluation points yet.</div>`; return; }
+  const xs = all.map(p => p.x), ys = all.map(p => p.y).concat(d.project.target != null ? [+d.project.target] : []);
+  const x0 = 0, x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), yp = (y1 - y0) * .06;
+  const X = v => L + (v - x0) / (x1 - x0 || 1) * (W - L - R), Y = v => Tt + (1 - (v - (y0 - yp)) / ((y1 + yp) - (y0 - yp) || 1)) * (H - Tt - B);
+  let s = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Learning curves">`;
+  niceTicks(y0 - yp, y1 + yp, 5).forEach(t => s += `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" class="gridline"/><text x="${L - 6}" y="${Y(t) + 4}" text-anchor="end">${fmt(t, 0)}</text>`);
+  niceTicks(x0, x1, W < 520 ? 4 : 8).forEach(t => s += `<text x="${X(t)}" y="${H - 8}" text-anchor="middle">${t >= 1000 ? (t / 1000) + "k" : t}</text>`);
+  if (d.project.target != null) s += `<line x1="${L}" x2="${W - R}" y1="${Y(+d.project.target)}" y2="${Y(+d.project.target)}" stroke="var(--muted)" stroke-dasharray="4 4"/><text x="${W - R}" y="${Y(+d.project.target) - 5}" text-anchor="end">target ${fmt(+d.project.target, 0)}</text>`;
+  const order = [...series].sort((a, b) => (b.g.is_baseline ? 1 : 0) - (a.g.is_baseline ? 1 : 0));
+  order.forEach(se => { const path = se.pts.map((p, i) => `${i ? "L" : "M"}${X(p.x).toFixed(1)},${Y(p.y).toFixed(1)}`).join("");
+    s += `<path d="${path}" fill="none" stroke="${colorOf(se.g)}" stroke-width="${se.w}" ${se.dash ? 'stroke-dasharray="5 4"' : ""} stroke-linejoin="round" opacity="${S.curveMode === "seeds" ? .85 : 1}"/>`; });
+  s += `<line id="cx" y1="${Tt}" y2="${H - B}" stroke="var(--ink-2)" stroke-width="1" style="display:none"/><rect x="${L}" y="${Tt}" width="${W - L - R}" height="${H - Tt - B}" fill="transparent" id="cHit"/></svg><div class="tip"></div>`;
+  el.innerHTML = s;
+  const tip = el.querySelector(".tip"), cx = el.querySelector("#cx"), hit = el.querySelector("#cHit");
+  const steps = [...new Set(xs)].sort((a, b) => a - b);
+  const svg = el.querySelector("svg");
+  hit.addEventListener("mousemove", e => {
+    const r = svg.getBoundingClientRect(); const mx = (e.clientX - r.left) * (W / r.width);
+    const xv = x0 + (mx - L) / (W - L - R) * (x1 - x0); const st = steps.reduce((a, b) => Math.abs(b - xv) < Math.abs(a - xv) ? b : a, steps[0]);
+    cx.setAttribute("x1", X(st)); cx.setAttribute("x2", X(st)); cx.style.display = "";
+    const rows = series.map(se => ({se, p: se.pts.find(p => p.x === st)})).filter(o => o.p).sort((a, b) => b.p.y - a.p.y).slice(0, 10);
+    tip.innerHTML = `<b>step ${st.toLocaleString()}</b><br>` + rows.map(o => `<span style="color:${colorOf(o.se.g)}">●</span> ${esc(o.se.name)}: ${fmt(o.p.y)}`).join("<br>");
+    tip.style.display = "block";
+    const px = X(st) * r.width / W; tip.style.left = (px + 14 + tip.offsetWidth > r.width ? px - tip.offsetWidth - 14 : px + 14) + "px"; tip.style.top = "8px";
+  });
+  hit.addEventListener("mouseleave", () => { tip.style.display = "none"; cx.style.display = "none"; });
+}
+let rsz; window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(drawCharts, 150); });
+
+function consequence(p) {
+  const d = D(), mode = S.settings.runner_mode;
+  if (p.kind === "runs") { const n = (p.what.match(/x (\d+) seed/) || [])[1] || "the";
+    return mode === "fixture" ? `${n} training run(s) start. Runner is in replay mode: prepared real runs are copied in and labelled as replays.` : `${n} real training run(s) start in the background on this computer (a few minutes each). The next cycle reads them once finished.`; }
+  if (p.kind === "resolve_hypothesis") return `${p.hypothesis} is closed with that outcome. If supported or refuted, EVO saves a lesson that steers future proposals.`;
+  if (p.kind === "fact_change") return "The fact gets a new version; the old one stays in history.";
+  if (p.kind === "metric_correction") return "The corrected scores become current; the old version stays in history.";
+  return "";
+}
+function propAsk(p) {
+  if (p.kind === "runs") return `Run ${esc(p.what.replace(/ x /, " × "))}${p.hypothesis ? ` to test ${esc(p.hypothesis)}` : ""}`;
+  if (p.kind === "resolve_hypothesis") return esc(p.what.replace(/^close/, "Close"));
+  return esc(p.what);
+}
+function statusPillP(s) { return `<span class="pill ${{executed: "p-good", approved: "p-good", rejected: "p-bad", failed: "p-bad"}[s] || "p-muted"}">${esc(s)}</span>`; }
+function cycNo(cid) { const c = D().cycles.find(c => c.cycle_id === cid); return c ? c.number : cid; }
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-approve],[data-reject]"); if (!a) return;
+  const id = a.dataset.approve || a.dataset.reject; const cm = $(`#cm-${id}`);
+  a.disabled = true;
+  doAct(a.dataset.approve ? "approve" : "reject", {proposal: +id, comment: cm ? cm.value : ""}).finally(() => a.disabled = false);
+});
+
+function memoryBody() {
+  const d = D();
+  const hy = d.hypotheses.map(h => { const stages = ["open", h.status === "open" ? "tested" : h.status];
+    const res = h.resolution || {};
+    return `<div class="hyp" id="hyp-${esc(h.label)}"><div class="row between"><div class="row"><span class="chip">${esc(h.label)}</span>${hypPill(h.status)}</div><span class="tiny muted">opened in cycle ${esc(cycNo(h.opened_cycle) || h.opened_cycle || "?")}${h.resolved_cycle ? ` · closed in cycle ${esc(cycNo(h.resolved_cycle))}` : ""}</span></div>
+      <div style="margin:8px 0 4px;font-weight:500">${esc(h.statement)}</div><div class="small muted">Change tested: <code>${esc(changeText(h.change))}</code></div>
+      ${res.summary ? `<div class="callout ${h.status === "supported" ? "good" : h.status === "refuted" ? "bad" : ""}" style="margin-top:8px">${esc(res.summary)}</div>` : ""}
+      <div style="margin-top:6px">${chips(h.evidence)}</div>
+      <div class="life"><span class="on">opened</span>→<span class="${h.status === "open" ? "on" : ""}">collecting seeds</span>→<span class="${h.status !== "open" ? "on" : ""}">${h.status === "open" ? "closed" : esc(h.status)}</span></div></div>`; }).join("");
+  const rej = d.proposals.filter(p => p.status === "rejected");
+  return `
+  <div class="section" style="margin-top:0"><h3>Ideas EVO is testing</h3><p class="sub" style="margin:2px 0 10px">Opened by EVO, closed only with your approval.</p>${hy || `<div class="empty">No hypotheses yet.</div>`}</div>
+  <div class="section"><h3>Lessons</h3><p class="sub" style="margin:2px 0 10px">Rules EVO learned. They steer what it proposes; reject one if it is wrong.</p>
+    <div class="card" style="padding:6px 8px">${d.lessons.length ? `<table class="tbl"><thead><tr><th>#</th><th>Lesson</th><th>Kind</th><th>Status</th><th></th></tr></thead><tbody>${d.lessons.map(l => `<tr><td>${l.lesson_id}</td><td>${esc(l.text)}</td><td>${l.kind === "avoid" ? '<span class="pill p-bad">avoid</span>' : '<span class="pill p-good">prefer</span>'}</td><td>${esc(l.status)}</td><td>${l.status === "current" ? `<button class="btn sm bad" data-lesson="${l.lesson_id}">Reject</button>` : ""}</td></tr>`).join("")}</tbody></table>` : `<p class="muted small" style="margin:10px">No lessons yet. They appear when a hypothesis is closed or a run collapses.</p>`}</div></div>
+  <div class="section"><h3>What you rejected</h3><p class="sub" style="margin:2px 0 10px">EVO will not propose these again.</p>
+    ${rej.length ? rej.map(p => `<div class="card flat" style="padding:12px 14px"><b>#${p.id}</b> ${propAsk(p)}${(p.approvals || [])[0] && p.approvals[0].comment ? `<div class="small muted">Your reason: “${esc(p.approvals[0].comment)}”</div>` : ""}</div>`).join("") : `<div class="empty">No rejections.</div>`}</div>
+  <div class="section"><h3>Corrections</h3><p class="sub" style="margin:2px 0 10px">Old versions are kept, never overwritten.</p>
+    <div class="stack"><div class="card flat"><h4 style="margin:0 0 6px">Facts</h4>${d.fact_history.length ? d.fact_history.map(f => `<div style="margin:8px 0"><code>${esc(f.key)}</code>: ${f.versions.map(v => `<span class="pill ${v.status === "current" ? "p-good" : "p-muted"}">v${v.v} ${esc(JSON.stringify(v.value))}</span>`).join(" → ")}${f.versions[f.versions.length - 1].reason ? `<div class="tiny muted">${esc(f.versions[f.versions.length - 1].reason)}</div>` : ""}</div>`).join("") : `<p class="small muted">No fact has been corrected.</p>`}</div>
+    <div class="card flat"><h4 style="margin:0 0 6px">Run scores</h4>${d.corrections.length ? d.corrections.map(c => `<div style="margin:8px 0"><a href="#" data-run="${esc(c.run)}" class="mono small">${esc(c.run)}</a>: ${fmt(c.from_score)} → <b>${fmt(c.to_score)}</b> <span class="tiny muted">v${c.from_v}→v${c.to_v}${c.reason ? " · " + esc(c.reason) : ""}</span></div>`).join("") : `<p class="small muted">No score has been corrected.</p>`}</div></div></div>
+  <div class="section"><h3>Safety findings</h3>${safetyTable()}</div>
+  <div class="section"><h3>Approved project facts</h3>${factsTable()}</div>`;
+}
+function hypPill(s) { return `<span class="pill ${{open: "p-info", supported: "p-good", refuted: "p-bad", inconclusive: "p-warn"}[s] || "p-muted"}">${esc(s)}</span>`; }
+function factsTable() {
+  const f = D().facts_current; const keys = Object.keys(f);
+  return `<div class="card scroll-x" style="padding:6px 8px"><table class="tbl"><tbody>${keys.map(k => `<tr><td style="width:180px"><code>${esc(k)}</code></td><td class="small">${esc(typeof f[k] === "object" ? JSON.stringify(f[k]) : f[k])}</td></tr>`).join("")}</tbody></table></div>`;
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-lesson]"); if (!b) return; if (confirm("Reject this lesson? It will stop steering proposals.")) doAct("lesson-reject", {lesson: +b.dataset.lesson}); });
+
+
+function statusPillL(s) { return `<span class="pill ${{running: "p-info", skipped_duplicate: "p-muted", succeeded: "p-good", failed: "p-bad", refused: "p-warn", skipped: "p-muted"}[s] || "p-muted"}">${esc(s)}</span>`; }
+function diagPill(k) { return `<span class="pill ${{untrusted_instruction: "p-bad", collapse: "p-bad", divergence: "p-bad", incomplete: "p-warn", plateau: "p-warn"}[k] || "p-muted"}">${esc(k.replace(/_/g, " "))}</span>`; }
+function diagText(g) {
+  const det = g.detail || g.details || {};
+  if (g.kind === "untrusted_instruction") return `Instruction-like text found in the log, treated as data: “${String(((det.hits || [])[0] || {}).excerpt || JSON.stringify(det)).slice(0, 220)}”`;
+  if (g.kind === "incomplete") return `Stopped at step ${det.last_step ?? "?"} of ${det.target_steps ?? "?"} with no DONE marker, so it's excluded from scores.`;
+  if (g.kind === "collapse") { const c = det.collapse || det; return `Peaked at ${c.smoothed_peak} (step ${c.peak_step}) then fell to ${c.smoothed_final}.`; }
+  if (g.kind === "plateau") return `Flat at ${det.score} (slope ${det.slope} per 10k steps).`;
+  return JSON.stringify(det).slice(0, 220);
+}
+
+
+function safetyTable() {
+  const d = D();
+  const rows = d.diagnoses.map(g => `<tr><td>${g.run_name ? `<a href="#" data-run="${esc(g.run_name)}" class="mono small">${esc(g.run_name)}</a>` : ""}</td><td>${diagPill(g.kind)}</td><td class="small">${esc(diagText(g))}</td></tr>`).join("");
+  return `<p class="sub" style="margin:2px 0 8px">Text in log files that looks like an instruction is flagged and only passed to the planner as untrusted data.</p>
+    <div class="scroll-x">${rows ? `<table class="tbl"><tbody>${rows}</tbody></table>` : `<p class="small muted">No findings.</p>`}</div>
+    <details data-k="toollog" style="margin-top:10px"><summary>Tool-call log (${d.stats.tool_calls} calls, ${d.stats.failed_attempts} failed)</summary><div class="scroll-x"><table class="tbl" style="margin-top:6px"><thead><tr><th>Tool</th><th>Status</th><th>Try</th><th>Error</th></tr></thead><tbody>
+    ${d.log.slice(-40).reverse().map(r => `<tr><td class="mono small">${esc(r.tool)}</td><td>${statusPillL(r.status)}</td><td>${r.attempt}</td><td class="tiny" style="color:var(--bad)">${esc((r.error || "").slice(0, 100))}</td></tr>`).join("")}</tbody></table></div></details>`;
+}
+
+/* ---------- SETUP ---------- */
+function settingsBody() {
+  const d = D(), s = S.settings; const curIdx = d.demo.findIndex(x => !x.done);
+  return `
+  <div class="grid g2">
+    <div>
+      <div class="card" id="demo"><h3>Demo checklist</h3><p class="small muted" style="margin:2px 0 6px">The viva storyline. Steps tick themselves off from the database.</p>
+        ${d.demo.map((x, i) => `<div class="check ${x.done ? "done" : i === curIdx ? "cur" : ""}"><div class="box">${x.done ? "✓" : ""}</div><div><div class="t">${esc(x.title)}</div><div class="x">${esc(x.text)}</div></div><div>${x.action && !x.done ? actButton(x.action, i === curIdx).replace("btn ", "btn sm ") : ""}</div></div>`).join("")}</div>
+      <div class="card" id="corrections"><h3>Correct a run's scores</h3><p class="small muted" style="margin:2px 0 8px">The demo baseline was evaluated with 3 episodes per point. These files re-score it with 20. Applying one adds a new score version; the old one stays.</p>
+        ${d.disk.corrections.length ? d.disk.corrections.map(c => `<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--line)"><div><span class="mono small">${esc(c.run)}</span> <span class="tiny muted">← ${esc(c.file)}</span></div>${c.status ? statusPillP(c.status) : c.run_known ? `<button class="btn sm" data-corr="${esc(c.file)}">Apply</button>` : `<span class="tiny muted">run not read yet</span>`}</div>`).join("") : `<p class="small muted">No correction files in fixtures/corrections.</p>`}
+        <label class="f" for="corrReason">Reason (stored with the new version)</label><input id="corrReason" value="eval used 3 episodes; re-scored with 20"></div>
+      <div class="card" id="facts"><h3>Correct a project fact</h3><p class="small muted" style="margin:2px 0 4px">E.g. cut <code>run_budget</code> to 12. The gate uses the new value immediately; history is kept.</p>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px"><div><label class="f" for="fkey">Fact</label><select id="fkey">${d.fact_keys.map(k => `<option ${k === "run_budget" ? "selected" : ""}>${esc(k)}</option>`).join("")}</select></div>
+        <div><label class="f" for="fval">New value</label><input id="fval" placeholder="12"></div></div>
+        <div class="tiny muted" id="fcur" style="margin-top:6px"></div>
+        <label class="f" for="freason">Reason</label><input id="freason" placeholder="GPU budget cut">
+        <button class="btn" style="margin-top:12px" id="fsave">Save new version</button></div>
+    </div>
+    <div>
+      <div class="card"><h3>Planner</h3><p class="small muted" style="margin:2px 0 8px">Set in <code>config.yaml</code>; you can override the model here for this session.</p>
+        <dl class="kv" style="grid-template-columns:110px 1fr"><dt>Default</dt><dd>${s.provider === "openai_compat" ? "LLM" : "Offline rules"}</dd><dt>Model</dt><dd><code>${esc(s.model)}</code></dd><dt>Endpoint</dt><dd>${esc(s.host || "–")}</dd><dt>API key</dt><dd>${s.key_present ? '<span class="pill p-good">found in .env</span>' : '<span class="pill p-warn">missing</span> <span class="tiny muted">put EVO_LLM_API_KEY in .env</span>'}</dd><dt>Steps/cycle</dt><dd>${s.max_steps}</dd></dl>
+        <label class="f" for="mdl">Model for this session</label><div class="row" style="flex-wrap:nowrap"><input id="mdl" value="${esc(s.overrides.model || "")}" placeholder="${esc(s.model)}" list="mdls"><button class="btn" id="mdlSave">Use</button></div>
+        <datalist id="mdls"><option value="openai/gpt-oss-120b"><option value="openai/gpt-oss-20b"></datalist></div>
+      <div class="card"><h3>Approved runs</h3><p class="small muted" style="margin:2px 0 8px">What happens when you approve a run proposal.</p>
+        <label class="opt ${s.runner_mode === "fixture" ? "sel" : ""}"><input type="radio" name="rm" value="fixture" ${s.runner_mode === "fixture" ? "checked" : ""}><div><div class="t">Replay prepared real runs</div><div class="x">Instant. Copies a matching real run from the fixture bank and labels it a replay. Best for the demo.</div></div></label>
+        <label class="opt ${s.runner_mode === "live" ? "sel" : ""}"><input type="radio" name="rm" value="live" ${s.runner_mode === "live" ? "checked" : ""}><div><div class="t">Train for real</div><div class="x">Starts Stable-Baselines3 training in the background (minutes per run).</div></div></label></div>
+      <div class="card"><h3>Demo data</h3><p class="small muted" style="margin:2px 0 8px">Prepared real runs you can drop into the project's runs folder.</p>
+        ${d.disk.fixture_sets.map(f => `<div class="row between" style="padding:7px 0;border-bottom:1px solid var(--line)"><div><b>${esc(f.name)}</b> <span class="tiny muted">${f.runs.length} runs</span></div>${f.staged ? '<span class="pill p-good">added</span>' : `<button class="btn sm" data-act="stage:${esc(f.name)}">Add</button>`}</div>`).join("") || `<p class="small muted">None.</p>`}
+        <p class="tiny muted" style="margin:8px 0 0">Your own runs go in <code>${esc(d.project.id ? "" : "")}projects/${esc(d.project.id)}/runs/</code>.</p></div>
+      <div class="card flat"><h3>Database</h3><p class="tiny muted mono" style="margin:4px 0 0;word-break:break-all">${esc(s.db)}</p></div>
+    </div>
+  </div>`;
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-corr]"); if (c) { c.disabled = true; doAct("correct-metric", {file: c.dataset.corr, reason: ($("#corrReason") || {}).value}); return; }
+  if (e.target.id === "fsave") { doAct("correct-fact", {key: $("#fkey").value, value: $("#fval").value, reason: $("#freason").value}); return; }
+  if (e.target.id === "mdlSave") { settingsSave({model: $("#mdl").value}); return; }
+});
+document.addEventListener("change", e => {
+  if (e.target.name === "rm") settingsSave({runner_mode: e.target.value});
+  if (e.target.id === "fkey") showFactCur();
+});
+document.addEventListener("focusin", e => { if (e.target.id === "fval") showFactCur(); });
+function showFactCur() { const k = $("#fkey").value; const v = D().facts_current[k]; $("#fcur").textContent = "Current: " + (typeof v === "object" ? JSON.stringify(v) : v); }
+async function settingsSave(b) {
+  try { const r = await api("/api/settings", b); S.settings = r.settings; toast("Settings updated for this session."); await refresh(true); } catch (e) { toast(e.message, true); }
+}
+
+
+function openDrawerFn(title, fn, wide) { openDrawer(title, fn(), wide); S.drawerFn = fn; }
+function openMemory() { openDrawerFn("What EVO remembers", memoryBody, false); }
+function openSettings() { openDrawerFn("Settings and demo tools", settingsBody, false); }
+
+/* ---------- onboarding ---------- */
+function renderOnboarding() {
+  renderNav();
+  const list = S.onboarding;
+  $("#view").innerHTML = `<div class="page-head"><div><div class="eyebrow">Welcome</div><h1>Start a project</h1><p>EVO reads a project's <code>project.yaml</code> once. You approve the facts it extracts (goal, baseline, search space, budget), and from then on everything lives in <code>evo.db</code>.</p></div></div>
+    ${list.map(o => `<div class="card"><div class="row between"><div><h3>${esc(o.name || o.file)}</h3><div class="small muted">${esc(o.env || "")} · ${esc(o.algo || "")} · <code>${esc(o.file)}</code></div></div>${o.onboarded ? '<span class="pill p-good">onboarded</span>' : `<button class="btn primary" data-onb="${esc(o.file)}">Review facts</button>`}</div>${o.goal ? `<p class="small" style="margin:8px 0 0">${esc(o.goal)}</p>` : ""}${o.error ? `<div class="callout bad">${esc(o.error)}</div>` : ""}</div>`).join("") || `<div class="empty">No projects/*/project.yaml found.</div>`}`;
+  $("#view").querySelectorAll("[data-onb]").forEach(b => b.onclick = () => onboardDialog(b.dataset.onb));
+}
+function onboardDialog(file) {
+  const o = S.onboarding.find(x => x.file === file);
+  openModal(`<header><h2>Approve the facts for ${esc(o.project_id)}?</h2><p class="small muted">Extracted from <code>${esc(file)}</code>. These become version 1 of the project's facts.</p></header>
+    <div class="body"><div class="scroll-x"><table class="tbl"><tbody>${Object.entries(o.facts).map(([k, v]) => `<tr><td><code>${esc(k)}</code></td><td class="small">${esc(typeof v === "object" ? JSON.stringify(v) : v)}</td></tr>`).join("")}</tbody></table></div></div>
+    <footer><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="onbGo">Approve and onboard</button></footer>`);
+  $("#onbGo").onclick = async () => {
+    try { const r = await api("/api/onboard", {file}); toast(r.message); closeModal(); S.projects = []; location.hash = `#/${encodeURIComponent(r.project)}/work`; boot(true); } catch (e) { toast(e.message, true); }
+  };
+}
+
+/* ---------- modal / drawer ---------- */
+function openModal(html) { $("#modal").innerHTML = html; $("#modal").classList.add("on"); $("#scrim").classList.add("on"); S.modal = true; }
+function closeModal() { $("#modal").classList.remove("on"); if (!S.drawer) $("#scrim").classList.remove("on"); S.modal = false; }
+function openDrawer(title, html, wide) { S.drawerFn = null; $("#drawerTitle").textContent = title; $("#drawerBody").innerHTML = html; $("#drawer").classList.toggle("wide", !!wide); $("#drawer").classList.add("on"); $("#scrim").classList.add("on"); wire($("#drawerBody")); }
+function closeDrawer() { $("#drawer").classList.remove("on"); S.drawer = null; S.drawerFn = null; if (!S.modal) $("#scrim").classList.remove("on"); }
+$("#drawerClose").onclick = closeDrawer;
+$("#scrim").onclick = () => { if (S.modal) closeModal(); else closeDrawer(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") { if (S.modal) closeModal(); else closeDrawer(); } });
+
+function openHow() {
+  openModal(`<header><h2>How EVO works</h2></header><div class="body">
+    <p>You train RL agents (here: PPO on LunarLander) and get a pile of run folders. EVO is the assistant that keeps track: it reads the results, works out what they really show, remembers what was tried, and proposes the next experiment. <b>You approve; it never spends compute on its own.</b></p>
+    <div class="flow" style="grid-template-columns:1fr">
+      <div><b>Read</b>New run folders: config, scores, logs. Each file is hashed.</div>
+      <div><b>Analyse</b>Plain code groups seeds by config and compares each with the baseline (bootstrap 95% interval).</div>
+      <div class="mem"><b>Brief</b>A briefing is built from memory: facts, hypotheses, lessons, your past decisions and rejections.</div>
+      <div><b>Decide</b>The planner (LLM or offline rules) picks ONE action and must cite evidence.</div>
+      <div><b>Gate</b>Code checks it: search space, budget, real evidence, no repeats of rejected ideas. It can refuse.</div>
+      <div><b>Act</b>Allowed actions run. Anything that costs compute becomes a proposal for you.</div>
+      <div class="mem"><b>Save</b>Every step is written to evo.db. Repeat up to 8 steps, then the cycle ends.</div></div>
+    <p class="small muted" style="margin-top:14px">“Persistent memory” means the next cycle (a new process, maybe days later) starts from evo.db alone: it knows H1 is open, what you rejected, and which scores were corrected.</p>
+    <p class="small muted">Words with a dotted underline (like ${T("seed")} or ${T("gate")}) explain themselves when you hover or tap them.</p></div>
+    <footer><button class="btn primary" onclick="closeModal()">Got it</button></footer>`);
+}
+
+async function openRun(name) {
+  openDrawer(name, `<div class="live"><span class="spin"></span>Loading run…</div>`);
+  try {
+    const r = (await api(`/api/p/${encodeURIComponent(S.pid)}/run/${encodeURIComponent(name)}`)).run;
+    const sm = r.summary || {}; const c = D().curves.find(x => x.run === name) || {}; const g = groupByHash(c.group);
+    const pts = (r.curve || []).filter(p => p.mean !== null);
+    let svg = "";
+    if (pts.length) { const W = 500, H = 160, L = 40, R = 8, Tt = 8, B = 20; const xs = pts.map(p => p.step), ys = pts.map(p => p.mean);
+      const x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+      const X = v => L + v / (x1 || 1) * (W - L - R), Y = v => Tt + (1 - (v - y0) / ((y1 - y0) || 1)) * (H - Tt - B);
+      svg = `<div class="chart"><svg viewBox="0 0 ${W} ${H}">${niceTicks(y0, y1, 4).map(t => `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" class="gridline"/><text x="${L - 5}" y="${Y(t) + 4}" text-anchor="end">${fmt(t, 0)}</text>`).join("")}<path d="${pts.map((p, i) => `${i ? "L" : "M"}${X(p.step)},${Y(p.mean)}`).join("")}" fill="none" stroke="${colorOf(g)}" stroke-width="2"/></svg></div>`; }
+    $("#drawerBody").innerHTML = `<div class="row">${statusPill(r.status)}<span class="small muted">seed ${esc(r.seed)} · ${esc(g ? g.label : "")} · score version ${esc(r.metric_version)}</span></div>
+      <dl class="kv"><dt>${T("score", "Score")}</dt><dd><b>${fmt(sm.score)}</b></dd><dt>Evaluations</dt><dd>${esc(sm.n_evals)}</dd><dt>Flags</dt><dd>${(sm.flags || []).map(f => `<span class="pill p-warn">${esc(f)}</span>`).join(" ") || "none"}</dd><dt>Findings</dt><dd>${(r.diagnoses || []).map(x => diagPill(x.kind)).join(" ") || "none"}</dd></dl>
+      ${svg}<h3 style="margin-top:14px">End of train.log</h3><p class="tiny muted">Shown as untrusted data, exactly as the planner receives it.</p><pre>${esc(r.log_tail || "")}</pre>`;
+  } catch (e) { $("#drawerBody").innerHTML = `<div class="callout bad">${esc(e.message)}</div>`; }
+}
+
+/* ---------- glossary popover ---------- */
+const pop = $("#pop");
+function showPop(el) { const g = GLOSS[el.dataset.term]; if (!g) return; pop.innerHTML = `<b>${esc(g[0])}</b>${esc(g[1])}`; pop.style.display = "block";
+  const r = el.getBoundingClientRect(); const left = Math.min(window.scrollX + r.left, window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 10);
+  pop.style.left = Math.max(8, left) + "px"; pop.style.top = (window.scrollY + r.bottom + 6) + "px"; }
+document.addEventListener("mouseover", e => { const t = e.target.closest(".term"); if (t) showPop(t); });
+document.addEventListener("mouseout", e => { if (e.target.closest(".term")) pop.style.display = "none"; });
+document.addEventListener("click", e => { const t = e.target.closest(".term"); if (t) { e.preventDefault(); showPop(t); } else if (!e.target.closest("#pop")) pop.style.display = "none"; });
+
+boot(true);
+</script>
+</body>
+</html>

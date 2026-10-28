@@ -1,0 +1,32 @@
+{
+  "pass_rate": "6/10",
+  "memory_on": 2,
+  "memory_off": 1,
+  "claims_correct": 5,
+  "resources": {
+    "approx_prompt_tokens_per_planner_call": 1601,
+    "planner_calls": [
+      {
+        "provider": "openai_compat-fallback",
+        "model": "llama-3.3-70b-versatile",
+        "n": 3,
+        "lat": 0
+      }
+    ],
+    "llm_http_calls_cached": 0,
+    "llm_tokens": {
+      "prompt": null,
+      "completion": null
+    },
+    "cycle_wall_seconds": {
+      "cycle1": 5.28,
+      "cycle2": 4.59,
+      "cycle3": 4.7,
+      "cycle-dungeon": 4.89
+    },
+    "training_wall_minutes_of_runs_in_project": 32.9,
+    "duplicate_agent_runs": 0,
+    "failed_attempts_logged": 0,
+    "skipped_duplicates": 0
+  }
+}

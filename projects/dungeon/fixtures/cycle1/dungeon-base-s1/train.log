@@ -1,0 +1,14 @@
+2026-10-23 10:14:43,590 INFO start run=dungeon-base-s1 env=GridDungeon-v0 algo=DQN seed=1 steps=60000 device=cpu
+2026-10-23 10:14:46,193 INFO eval step=5000 mean=-0.54 std=0.12 n=20
+2026-10-23 10:14:49,463 INFO eval step=10000 mean=0.30 std=0.82 n=20
+2026-10-23 10:14:53,155 INFO eval step=15000 mean=0.46 std=0.65 n=20
+2026-10-23 10:14:56,943 INFO eval step=20000 mean=0.08 std=0.68 n=20
+2026-10-23 10:15:00,941 INFO eval step=25000 mean=-0.02 std=0.70 n=20
+2026-10-23 10:15:04,913 INFO eval step=30000 mean=0.26 std=0.81 n=20
+2026-10-23 10:15:08,965 INFO eval step=35000 mean=-0.11 std=0.72 n=20
+2026-10-23 10:15:12,755 INFO eval step=40000 mean=0.71 std=0.70 n=20
+2026-10-23 10:15:16,721 INFO eval step=45000 mean=0.84 std=0.73 n=20
+2026-10-23 10:15:20,662 INFO eval step=50000 mean=0.64 std=0.79 n=20
+2026-10-23 10:15:24,799 INFO eval step=55000 mean=0.73 std=0.71 n=20
+2026-10-23 10:15:28,685 INFO eval step=60000 mean=1.00 std=0.54 n=20
+2026-10-23 10:15:28,687 INFO finished in 47.7s
